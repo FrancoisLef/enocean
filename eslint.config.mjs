@@ -13,4 +13,9 @@ export default [
   includeIgnoreFile(gitignorePath),
   ...oclif,
   prettier,
+  {
+    rules: {
+      'unicorn/prefer-module': 'off',
+    },
+  },
 ];
