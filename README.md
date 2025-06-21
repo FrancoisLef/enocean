@@ -1,20 +1,21 @@
-enocean
-=================
+# enocean
 
 A new CLI generated with oclif
-
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/enocean.svg)](https://npmjs.org/package/enocean)
 [![Downloads/week](https://img.shields.io/npm/dw/enocean.svg)](https://npmjs.org/package/enocean)
 
-
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g enocean
 $ enocean COMMAND
@@ -26,22 +27,26 @@ USAGE
   $ enocean COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`enocean hello PERSON`](#enocean-hello-person)
-* [`enocean hello world`](#enocean-hello-world)
-* [`enocean help [COMMAND]`](#enocean-help-command)
-* [`enocean plugins`](#enocean-plugins)
-* [`enocean plugins add PLUGIN`](#enocean-plugins-add-plugin)
-* [`enocean plugins:inspect PLUGIN...`](#enocean-pluginsinspect-plugin)
-* [`enocean plugins install PLUGIN`](#enocean-plugins-install-plugin)
-* [`enocean plugins link PATH`](#enocean-plugins-link-path)
-* [`enocean plugins remove [PLUGIN]`](#enocean-plugins-remove-plugin)
-* [`enocean plugins reset`](#enocean-plugins-reset)
-* [`enocean plugins uninstall [PLUGIN]`](#enocean-plugins-uninstall-plugin)
-* [`enocean plugins unlink [PLUGIN]`](#enocean-plugins-unlink-plugin)
-* [`enocean plugins update`](#enocean-plugins-update)
+
+- [`enocean hello PERSON`](#enocean-hello-person)
+- [`enocean hello world`](#enocean-hello-world)
+- [`enocean help [COMMAND]`](#enocean-help-command)
+- [`enocean plugins`](#enocean-plugins)
+- [`enocean plugins add PLUGIN`](#enocean-plugins-add-plugin)
+- [`enocean plugins:inspect PLUGIN...`](#enocean-pluginsinspect-plugin)
+- [`enocean plugins install PLUGIN`](#enocean-plugins-install-plugin)
+- [`enocean plugins link PATH`](#enocean-plugins-link-path)
+- [`enocean plugins remove [PLUGIN]`](#enocean-plugins-remove-plugin)
+- [`enocean plugins reset`](#enocean-plugins-reset)
+- [`enocean plugins uninstall [PLUGIN]`](#enocean-plugins-uninstall-plugin)
+- [`enocean plugins unlink [PLUGIN]`](#enocean-plugins-unlink-plugin)
+- [`enocean plugins update`](#enocean-plugins-update)
 
 ## `enocean hello PERSON`
 
@@ -394,4 +399,5 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.41/src/commands/plugins/update.ts)_
+
 <!-- commandsstop -->
