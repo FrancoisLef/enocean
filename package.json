@@ -45,8 +45,10 @@
     }
   },
   "dependencies": {
+    "@inquirer/prompts": "7.5.3",
     "@oclif/core": "4.4.0",
-    "@oclif/plugin-help": "6.2.29"
+    "@oclif/plugin-help": "6.2.29",
+    "serialport": "13.0.0"
   },
   "devDependencies": {
     "@eslint/compat": "1.3.0",
