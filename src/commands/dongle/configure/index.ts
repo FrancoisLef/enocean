@@ -2,14 +2,14 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 
 import { BaseCommand } from '../../../base.command';
-import { listPorts } from '../../../lib/serial/list-ports';
+import { Dongle } from '../../../connectors/dongle.connector';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure EnOcean dongle';
   static examples = [`<%= config.bin %> <%= command.id %> --help`];
 
   async run(): Promise<void> {
-    const ports = await listPorts();
+    const ports = await Dongle.listPorts();
 
     const port = await select<string>({
       choices: ports.map((port) => ({

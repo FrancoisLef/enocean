@@ -15,6 +15,11 @@ export class Dongle {
     });
   }
 
+  public static async listPorts() {
+    const ports = await SerialPort.list();
+    return ports.map((port) => port.path);
+  }
+
   public open() {
     this.serial.open(() => {
       console.log(
