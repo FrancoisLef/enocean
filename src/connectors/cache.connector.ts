@@ -1,8 +1,9 @@
 import { Storage } from './storage.connector';
 
 export type CacheData = {
-  baud?: number;
-  port?: string;
+  'dongle:baud'?: number;
+  'dongle:configured'?: boolean;
+  'dongle:port'?: string;
 };
 
 export type CacheKey = keyof CacheData;
