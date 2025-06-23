@@ -6,8 +6,10 @@ import { Storage } from '../../../src/connectors/storage.connector';
 
 describe('Storage', () => {
   let tmpDir: string;
+  let storage: Storage;
 
   beforeEach(async () => {
+    storage = new Storage();
     // Create a unique temporary directory next to the test file
     tmpDir = path.join(
       __dirname,
@@ -42,7 +44,7 @@ describe('Storage', () => {
       expect(fileExistsBefore).to.equal(false);
 
       // Run the function
-      await Storage.accessFile(tmpDir, filename);
+      await storage.accessFile(tmpDir, filename);
 
       // Verify file exists after
       let fileExistsAfter = false;
@@ -67,7 +69,7 @@ describe('Storage', () => {
       await fs.writeFile(filePath, JSON.stringify(testData), 'utf8');
 
       // Run the function
-      await Storage.accessFile(tmpDir, filename);
+      await storage.accessFile(tmpDir, filename);
 
       // Verify content is unchanged
       const content = await fs.readFile(filePath, 'utf8');
@@ -79,7 +81,7 @@ describe('Storage', () => {
       const filename = 'deep-file.json';
 
       // Run the function with a nested path
-      await Storage.accessFile(nestedPath, filename);
+      await storage.accessFile(nestedPath, filename);
 
       // Verify file exists
       const filePath = path.join(nestedPath, filename);

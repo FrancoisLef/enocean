@@ -1,8 +1,8 @@
 import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 
-import { BaseCommand } from '../../base.command';
-import { listPorts } from '../../lib/serial/list-ports';
+import { BaseCommand } from '../../../base.command';
+import { listPorts } from '../../../lib/serial/list-ports';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure EnOcean dongle';

@@ -39,8 +39,8 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "configure": {
-        "description": "Configure the EnOcean dongle"
+      "dongle": {
+        "description": "Manage EnOcean dongle"
       }
     }
   },
