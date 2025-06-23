@@ -1,27 +1,34 @@
 import { Storage } from './storage.connector';
 
 export type CacheData = {
+  baud?: number;
   port?: string;
 };
 
 export type CacheKey = keyof CacheData;
 
 export class Cache {
-  private data: CacheData;
-  private file: string;
+  private cache: CacheData;
+  private cacheFile: string;
+  private storage: Storage;
 
-  constructor({ dataDir }: { dataDir: string }) {
-    this.data = {};
-    this.file = `${dataDir}/cache.json`;
+  constructor({ cacheDir }: { cacheDir: string }) {
+    this.cache = {};
+    this.cacheFile = `${cacheDir}/cache.json`;
+    this.storage = new Storage();
   }
 
   public get<T extends CacheKey>(key: T): CacheData[T] {
-    return this.data[key];
+    return this.cache[key];
   }
 
   public async init(): Promise<Cache> {
-    await Storage.accessFile(this.file);
-    this.data = await Storage.readFile<CacheData>(this.file);
+    // Ensure the cache file exists
+    await this.storage.accessFile(this.cacheFile);
+
+    // Read the cache file
+    this.cache = await this.storage.readJSON<CacheData>(this.cacheFile);
+
     return this;
   }
 
@@ -29,8 +36,12 @@ export class Cache {
     key: T,
     value: CacheData[T],
   ): Promise<Cache> {
-    this.data[key] = value;
-    await Storage.writeFile<CacheData>(this.data, this.file);
+    // Update cache value
+    this.cache[key] = value;
+
+    // Write the updated cache back to the file
+    await this.storage.writeJSON<CacheData>(this.cache, this.cacheFile);
+
     return this;
   }
 }

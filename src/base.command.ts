@@ -16,9 +16,13 @@ export abstract class BaseCommand extends Command {
   }
 
   public async init(): Promise<void> {
-    this.cache = await new Cache({
-      dataDir: this.config.dataDir,
-    }).init();
+    // Initialize the cache
+    if (!this.cache) {
+      this.cache = await new Cache({
+        cacheDir: this.config.cacheDir,
+      }).init();
+    }
+
     await super.init();
   }
 }

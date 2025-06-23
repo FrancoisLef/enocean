@@ -7,7 +7,7 @@ export class Storage {
    * If the file does not exist, it creates the file and initializes it with an empty object.
    * If the parent directory does not exist, it creates the directory recursively.
    */
-  public static async accessFile(...paths: string[]) {
+  public async accessFile(...paths: string[]) {
     const file = path.join(...paths);
 
     try {
@@ -22,14 +22,20 @@ export class Storage {
     }
   }
 
-  public static async readFile<T>(...paths: string[]): Promise<T> {
+  public async readJSON<T>(...paths: string[]): Promise<T> {
     const file = path.join(...paths);
+
+    // Read file content and parse it as JSON
     const content = await fs.readFile(file, 'utf8');
+
     return JSON.parse(content) as T;
   }
 
-  public static async writeFile<T>(data: T, ...paths: string[]): Promise<void> {
+  public async writeJSON<T>(data: T, ...paths: string[]): Promise<T> {
     const file = path.join(...paths);
+
     await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8');
+
+    return data;
   }
 }
