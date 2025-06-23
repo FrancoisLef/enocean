@@ -1,4 +1,5 @@
 import { number, select } from '@inquirer/prompts';
+import chalk from 'chalk';
 
 import { BaseCommand } from '../../base.command';
 import { listPorts } from '../../lib/serial/list-ports';
@@ -12,13 +13,18 @@ export default class Configure extends BaseCommand {
 
     const port = await select<string>({
       choices: ports.map((port) => ({
-        description: `Port: ${port}`,
-        name: port === this.cache.get('port') ? `${port} · selected` : port,
+        name:
+          port === this.cache.get('port')
+            ? `${chalk.bold(port)} ${chalk.italic.dim('(default)')}`
+            : port,
+        short: port,
         value: port,
       })),
       default: this.cache.get('port'),
       instructions: {
-        navigation: `<↑ ↓> arrow keys to navigate and <enter> to confirm.`,
+        navigation: chalk.italic(
+          `<↑ ↓> arrow keys to navigate and <enter> to confirm.`,
+        ),
         pager: 'More options available (use arrow keys ↑ ↓)',
       },
       message: 'Select a serial port to use:',
@@ -27,16 +33,15 @@ export default class Configure extends BaseCommand {
       },
     });
 
-    await this.cache.set('port', port);
-
     const baud =
       (await number({
         default: this.cache.get('baud') || 57_600,
         message: 'Enter the baud rate:',
       })) ?? 57_600;
 
+    await this.cache.set('port', port);
     await this.cache.set('baud', baud);
 
-    this.log(`Selected port: ${port} with baud rate: ${baud}`);
+    this.log(chalk.green('✔'), chalk.bold('Dongle is configured'));
   }
 }

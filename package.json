@@ -48,6 +48,7 @@
     "@inquirer/prompts": "7.5.3",
     "@oclif/core": "4.4.0",
     "@oclif/plugin-help": "6.2.29",
+    "chalk": "5.4.1",
     "serialport": "13.0.0"
   },
   "devDependencies": {
