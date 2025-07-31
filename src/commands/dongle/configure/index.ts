@@ -5,7 +5,7 @@ import { BaseCommand } from '../../../base.command';
 import { Dongle } from '../../../connectors/dongle.connector';
 
 export default class Configure extends BaseCommand {
-  static description = 'Configure EnOcean dongle';
+  static description = 'Configure dongle';
   static examples = [`<%= config.bin %> <%= command.id %> --help`];
 
   async run(): Promise<void> {
