@@ -1,5 +1,7 @@
 import { BaseCommand } from '../../../base.command';
-import { Dongle } from '../../../connectors/dongle.connector';
+// import { Dongle } from '../../../connectors/dongle.connector';
+import { EnOceanManager } from '../../../libraries/enocean/manager';
+import { EEPDecoder } from '../../../libraries/enocean/profiles';
 
 export default class Listen extends BaseCommand {
   static description = 'Listen for telegrams';
@@ -17,13 +19,37 @@ export default class Listen extends BaseCommand {
       });
     }
 
-    const dongle = new Dongle({
-      baud,
-      port,
+    const manager = new EnOceanManager();
+
+    manager.on('eepData', (data) => {
+      if (data.profile === 'F6-02-01') {
+        console.log(
+          `Interrupteur ${data.senderId.toString(16)}: Rocker A=${data.rockerA}, Action=${data.rockerAction}`,
+        );
+      } else if (data.profile === 'D2-01-12') {
+        console.log(
+          `Relay Nodon ${data.senderId.toString(16)}: Canal=${data.channel}, État=${data.outputState}, Valeur=${data.outputValue}%`,
+        );
+      }
     });
 
-    dongle.open();
+    // manager.on('radioTelegram', (telegram) => {
+    //   // Décodage manuel si nécessaire
+    //   const decoded = EEPDecoder.decode(telegram);
+    //   if (decoded) {
+    //     console.log('Données décodées:', decoded);
+    //   }
+    // });
 
-    console.log('Connecting to EnOcean dongle...');
+    manager.connect(port, { baudRate: baud });
+
+    // const dongle = new Dongle({
+    //   baud,
+    //   port,
+    // });
+
+    // dongle.open();
+
+    // console.log('Connecting to EnOcean dongle...');
   }
 }
