@@ -1,5 +1,5 @@
-import { BaseCommand } from '../../../base.command';
-import { EnOceanManager } from '../../../libraries/enocean/manager';
+import { BaseCommand } from '../base.command';
+import { EnOceanManager } from '../libraries/enocean/manager';
 
 export default class Listen extends BaseCommand {
   static description = 'Listen for telegrams';
@@ -13,7 +13,7 @@ export default class Listen extends BaseCommand {
     if (!isConfigured || !port || !baud) {
       this.error('The dongle is not configured', {
         code: 'dongle_not_configured',
-        suggestions: ['Run `dongle:configure` to set up the dongle.'],
+        suggestions: ['Run `configure` to set up the dongle.'],
       });
     }
 

@@ -37,7 +37,7 @@
     "plugins": [
       "@oclif/plugin-help"
     ],
-    "topicSeparator": " ",
+    "topicSeparator": ":",
     "topics": {
       "dongle": {
         "description": "Manage EnOcean dongle"
