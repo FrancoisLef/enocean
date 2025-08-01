@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../../base.command';
-import { EnOceanManager } from '../../../core/enocean/manager';
+import { EnOceanManager } from '../../../libraries/enocean/manager';
 
 export default class Listen extends BaseCommand {
   static description = 'Listen for telegrams';

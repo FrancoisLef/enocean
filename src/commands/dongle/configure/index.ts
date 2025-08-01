@@ -2,7 +2,7 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 
 import { BaseCommand } from '../../../base.command';
-import { NodeSerialPortAdapter } from '../../../infrastructure/serial/serialport-adapter';
+import { NodeSerialPortAdapter } from '../../../shared/serial';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure dongle';

@@ -6,7 +6,7 @@
 /tmp
 /node_modules
 oclif.manifest.json
-src/infrastructure/storage/tmp
+src/shared/storage/tmp
 
 
 

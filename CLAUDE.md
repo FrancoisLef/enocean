@@ -19,15 +19,15 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
 
 - **Base Command** (`src/base.command.ts`): Abstract base class for all CLI commands that provides cache initialization and error handling
 - **Commands** (`src/commands/`): OCLIF command implementations organized by topic (e.g., `dongle/configure`, `dongle/listen`)
-- **Core** (`src/core/`): Framework-agnostic business logic:
+- **Libraries** (`src/libraries/`): Framework-agnostic business logic:
   - `enocean/`: Core EnOcean protocol implementation
     - `manager.ts`: Main EnOcean communication manager with event handling
     - `parser.ts`: ESP3 packet parsing logic
     - `profiles.ts`: EEP (EnOcean Equipment Profile) decoder
     - `types.ts`: TypeScript definitions for EnOcean protocol structures
-- **Infrastructure** (`src/infrastructure/`): External system adapters:
+- **Shared** (`src/shared/`): External system adapters:
   - `storage/file-storage.ts`: File system operations implementation
-  - `serial/serialport-adapter.ts`: Serial port communication abstraction
+  - `serial/serialport.adapter.ts`: Serial port communication abstraction
 
 ### Key Architectural Patterns
 
@@ -35,7 +35,7 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
 - **Event-driven**: The `EnOceanManager` extends `EventEmitter` to handle telegram reception
 - **OCLIF Framework**: Commands follow OCLIF conventions with static descriptions and examples
 - **Dependency Inversion**: Core logic depends on abstractions, not concrete implementations
-- **Framework Agnostic Core**: Business logic can be used in any context (CLI, web, desktop, etc.)
+- **Framework Agnostic Libraries**: Business logic can be used in any context (CLI, web, desktop, etc.)
 - **TypeScript**: Fully typed codebase with strict type checking
 
 ### Library Usage (Non-CLI)
@@ -66,7 +66,7 @@ await manager.connect('/dev/ttyUSB0', { baudRate: 57600 });
 
 - **Framework Separation**: Core EnOcean logic is completely independent of OCLIF CLI framework
 - **SerialPort Abstraction**: Uses adapter pattern for serial communication (easy to mock for testing)
-- **Storage Abstraction**: File operations are abstracted through infrastructure layer
+- **Storage Abstraction**: File operations are abstracted through shared layer
 - **Supports TCM 310 USB dongles** with 57,600 baud default
 - **Cache files** are stored in OCLIF's cache directory (CLI-specific concern)
 - **Commands require dongle** to be configured before use

@@ -1,5 +1,5 @@
 // Library exports for non-CLI usage
-export * from './core';
+export * from './libraries';
 
 // CLI entry point
 export { run } from '@oclif/core';
