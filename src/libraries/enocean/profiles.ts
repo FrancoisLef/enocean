@@ -142,7 +142,9 @@ export class EEPDecoder {
     const command = ByteFieldExtractor.extractD2Command(cmdByte);
 
     if (command === null) {
-      console.warn(`Commande D2-01-12 inconnue: ${ByteFieldExtractor.extractChannel(cmdByte, 0xf0)}`);
+      console.warn(
+        `Commande D2-01-12 inconnue: ${ByteFieldExtractor.extractChannel(cmdByte, 0xf0)}`,
+      );
       return null;
     }
 
@@ -202,10 +204,14 @@ export class EEPDecoder {
           // Canal étendu si nécessaire
           if (telegram.data.length >= 3) {
             channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f); // 5 bits pour le canal (0-29)
-            outputState = ByteFieldExtractor.extractBooleanState(telegram.data[2]);
+            outputState = ByteFieldExtractor.extractBooleanState(
+              telegram.data[2],
+            );
             outputValue = outputState ? 100 : 0;
           } else {
-            outputState = ByteFieldExtractor.extractBooleanState(telegram.data[1]);
+            outputState = ByteFieldExtractor.extractBooleanState(
+              telegram.data[1],
+            );
             outputValue = outputState ? 100 : 0;
           }
         }
@@ -261,7 +267,9 @@ export class EEPDecoder {
     const secondAction = ByteFieldExtractor.extractBooleanState(dataByte, 0);
 
     // Déterminer l'action basée sur le bit T21 du status
-    const rockerAction = ByteFieldExtractor.extractRockerAction(telegram.status);
+    const rockerAction = ByteFieldExtractor.extractRockerAction(
+      telegram.status,
+    );
 
     return {
       energyBow,

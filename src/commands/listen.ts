@@ -6,9 +6,11 @@ export default class Listen extends BaseCommand {
   static examples = ['<%= config.bin %> <%= command.id %>'];
 
   public async run(): Promise<void> {
-    const isConfigured = this.cache.get('dongle:configured');
-    const port = this.cache.get('dongle:port');
-    const baud = this.cache.get('dongle:baud');
+    const {
+      'dongle:baud': baud,
+      'dongle:configured': isConfigured,
+      'dongle:port': port,
+    } = this.cache.getAll();
 
     if (!isConfigured || !port || !baud) {
       this.error('The dongle is not configured', {

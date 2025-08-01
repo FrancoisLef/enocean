@@ -21,7 +21,11 @@ export class BitOperations {
    * @param endBit - Ending bit position (0-7), inclusive
    * @returns Extracted bits as a number
    */
-  public static extractBits(value: number, startBit: number, endBit: number): number {
+  public static extractBits(
+    value: number,
+    startBit: number,
+    endBit: number,
+  ): number {
     const bitCount = endBit - startBit + 1;
     const mask = (1 << bitCount) - 1;
     return (value >> startBit) & mask;
@@ -121,7 +125,7 @@ export class CRC8Calculator {
 
     for (const byte of data) {
       crc = BitOperations.xor(crc, byte);
-      
+
       for (let bitIndex = 0; bitIndex < 8; bitIndex++) {
         if (BitOperations.isMostSignificantBitSet(crc)) {
           crc = BitOperations.shiftLeft(crc, 1);
@@ -129,7 +133,7 @@ export class CRC8Calculator {
         } else {
           crc = BitOperations.shiftLeft(crc, 1);
         }
-        
+
         crc = BitOperations.toByte(crc);
       }
     }
@@ -149,7 +153,10 @@ export class ByteFieldExtractor {
    * @param bitPosition - Position of the state bit
    * @returns Boolean state
    */
-  public static extractBooleanState(value: number, bitPosition: number = 0): boolean {
+  public static extractBooleanState(
+    value: number,
+    bitPosition: number = 0,
+  ): boolean {
     return BitOperations.isBitSet(value, bitPosition);
   }
 
@@ -168,9 +175,11 @@ export class ByteFieldExtractor {
    * @param commandByte - First byte of telegram data
    * @returns Command type
    */
-  public static extractD2Command(commandByte: number): 'dimming' | 'status_request' | 'status_response' | 'switching' | null {
+  public static extractD2Command(
+    commandByte: number,
+  ): 'dimming' | 'status_request' | 'status_response' | 'switching' | null {
     const commandCode = BitOperations.getUpperNibble(commandByte);
-    
+
     switch (commandCode) {
       case 1: {
         return 'switching';
@@ -199,7 +208,9 @@ export class ByteFieldExtractor {
    * @param statusByte - Status byte from telegram
    * @returns Action type: 'pressed' or 'released'
    */
-  public static extractRockerAction(statusByte: number): 'pressed' | 'released' {
+  public static extractRockerAction(
+    statusByte: number,
+  ): 'pressed' | 'released' {
     const t21Bit = BitOperations.extractBit(statusByte, 5);
     return t21Bit === 1 ? 'pressed' : 'released';
   }
@@ -210,9 +221,12 @@ export class ByteFieldExtractor {
    * @param startBit - Starting bit position
    * @returns Rocker position: 'down', 'none', 'up'
    */
-  public static extractRockerPosition(value: number, startBit: number): 'down' | 'none' | 'up' {
+  public static extractRockerPosition(
+    value: number,
+    startBit: number,
+  ): 'down' | 'none' | 'up' {
     const bits = BitOperations.extractBits(value, startBit, startBit + 1);
-    
+
     switch (bits) {
       case 0x00: {
         return 'none';

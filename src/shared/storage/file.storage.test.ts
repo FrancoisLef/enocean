@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import fs from 'node:fs/promises';
 import path from 'node:path';

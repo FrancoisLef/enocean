@@ -23,6 +23,10 @@ export class CacheStorage {
     return this.cache[key];
   }
 
+  public getAll(): CacheData {
+    return { ...this.cache };
+  }
+
   public async init(): Promise<CacheStorage> {
     // Ensure the cache file exists
     await this.storage.accessFile(this.cacheFile);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -33,9 +32,9 @@ describe('CacheStorage', () => {
   describe('constructor', () => {
     it('creates a CacheStorage instance with empty cache', () => {
       expect(cacheStorage).to.be.instanceOf(CacheStorage);
-      expect(cacheStorage.get('dongle:port')).to.be.undefined;
-      expect(cacheStorage.get('dongle:baud')).to.be.undefined;
-      expect(cacheStorage.get('dongle:configured')).to.be.undefined;
+      expect(cacheStorage.get('dongle:port')).to.equal(undefined);
+      expect(cacheStorage.get('dongle:baud')).to.equal(undefined);
+      expect(cacheStorage.get('dongle:configured')).to.equal(undefined);
     });
   });
 
@@ -52,7 +51,7 @@ describe('CacheStorage', () => {
         fileExists = false;
       }
 
-      expect(fileExists).to.be.false;
+      expect(fileExists).to.equal(false);
 
       // Initialize cache
       const result = await cacheStorage.init();
@@ -65,7 +64,7 @@ describe('CacheStorage', () => {
         fileExists = false;
       }
 
-      expect(fileExists).to.be.true;
+      expect(fileExists).to.equal(true);
       expect(result).to.equal(cacheStorage);
     });
 
@@ -99,9 +98,9 @@ describe('CacheStorage', () => {
   describe('get', () => {
     it('returns undefined for non-existent keys', async () => {
       await cacheStorage.init();
-      expect(cacheStorage.get('dongle:port')).to.be.undefined;
-      expect(cacheStorage.get('dongle:baud')).to.be.undefined;
-      expect(cacheStorage.get('dongle:configured')).to.be.undefined;
+      expect(cacheStorage.get('dongle:port')).to.equal(undefined);
+      expect(cacheStorage.get('dongle:baud')).to.equal(undefined);
+      expect(cacheStorage.get('dongle:configured')).to.equal(undefined);
     });
 
     it('returns cached values after initialization', async () => {
@@ -118,7 +117,7 @@ describe('CacheStorage', () => {
 
       expect(cacheStorage.get('dongle:port')).to.equal('/dev/ttyUSB1');
       expect(cacheStorage.get('dongle:baud')).to.equal(115_200);
-      expect(cacheStorage.get('dongle:configured')).to.be.undefined;
+      expect(cacheStorage.get('dongle:configured')).to.equal(undefined);
     });
   });
 
@@ -232,6 +231,70 @@ describe('CacheStorage', () => {
       expect(cacheStorage.get('dongle:baud')).to.equal(57_600);
       // New value should be set
       expect(cacheStorage.get('dongle:configured')).to.equal(true);
+    });
+  });
+
+  describe('getAll', () => {
+    beforeEach(async () => {
+      await cacheStorage.init();
+    });
+
+    it('returns empty object when cache is empty', () => {
+      const result = cacheStorage.getAll();
+      expect(result).to.deep.equal({});
+    });
+
+    it('returns all cache values', async () => {
+      await cacheStorage.set({
+        'dongle:baud': 57_600,
+        'dongle:configured': true,
+        'dongle:port': '/dev/ttyUSB0',
+      });
+
+      const result = cacheStorage.getAll();
+      expect(result).to.deep.equal({
+        'dongle:baud': 57_600,
+        'dongle:configured': true,
+        'dongle:port': '/dev/ttyUSB0',
+      });
+    });
+
+    it('returns partial cache values when some are undefined', async () => {
+      await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
+      await cacheStorage.set('dongle:baud', 115_200);
+
+      const result = cacheStorage.getAll();
+      expect(result).to.deep.equal({
+        'dongle:baud': 115_200,
+        'dongle:port': '/dev/ttyUSB0',
+      });
+    });
+
+    it('returns a copy of cache data (not a reference)', async () => {
+      await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
+
+      const result = cacheStorage.getAll();
+      result['dongle:port'] = '/dev/ttyUSB1';
+
+      // Original cache should remain unchanged
+      expect(cacheStorage.get('dongle:port')).to.equal('/dev/ttyUSB0');
+    });
+
+    it('reflects changes after cache updates', async () => {
+      await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
+
+      let result = cacheStorage.getAll();
+      expect(result).to.deep.equal({
+        'dongle:port': '/dev/ttyUSB0',
+      });
+
+      await cacheStorage.set('dongle:baud', 57_600);
+
+      result = cacheStorage.getAll();
+      expect(result).to.deep.equal({
+        'dongle:baud': 57_600,
+        'dongle:port': '/dev/ttyUSB0',
+      });
     });
   });
 
