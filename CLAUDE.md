@@ -25,10 +25,6 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
     - `parser.ts`: ESP3 packet parsing logic
     - `profiles.ts`: EEP (EnOcean Equipment Profile) decoder
     - `types.ts`: TypeScript definitions for EnOcean protocol structures
-  - `device/`: Hardware abstraction layer
-    - `dongle.ts`: EnOcean dongle management (uses infrastructure adapters)
-  - `config/`: Configuration management
-    - `configuration.ts`: Cache-based configuration storage
 - **Infrastructure** (`src/infrastructure/`): External system adapters:
   - `storage/file-storage.ts`: File system operations implementation
   - `serial/serialport-adapter.ts`: Serial port communication abstraction
@@ -47,7 +43,7 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
 The core functionality can be used independently of the CLI:
 
 ```typescript
-import { EnOceanManager, Dongle } from 'enocean';
+import { EnOceanManager } from 'enocean';
 
 // Use in any application context
 const manager = new EnOceanManager();
@@ -55,15 +51,14 @@ manager.on('eepData', (data) => {
   console.log('Received data:', data);
 });
 
-const dongle = new Dongle({ port: '/dev/ttyUSB0', baud: 57600 });
-await dongle.open();
+await manager.connect('/dev/ttyUSB0', { baudRate: 57600 });
 ```
 
 ### Data Flow
 
-1. User configures dongle via `dongle configure` command (stores port/baud in cache)
+1. User configures dongle via `dongle configure` command (stores port/baud in cache using NodeSerialPortAdapter.listPorts())
 2. `dongle listen` command reads configuration and initializes `EnOceanManager`
-3. Manager connects to serial port and listens for ESP3 packets
+3. Manager connects directly to serial port using SerialPort and listens for ESP3 packets
 4. Incoming data is parsed and decoded using EEP profiles
 5. Decoded telegrams are emitted as events and logged to console
 

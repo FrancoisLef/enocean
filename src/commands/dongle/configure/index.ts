@@ -2,14 +2,14 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 
 import { BaseCommand } from '../../../base.command';
-import { Dongle } from '../../../core/device/dongle';
+import { NodeSerialPortAdapter } from '../../../infrastructure/serial/serialport-adapter';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure dongle';
   static examples = [`<%= config.bin %> <%= command.id %> --help`];
 
   async run(): Promise<void> {
-    const ports = await Dongle.listPorts();
+    const ports = await NodeSerialPortAdapter.listPorts();
 
     const port = await select<string>({
       choices: ports.map((port) => ({

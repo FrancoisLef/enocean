@@ -1,5 +1,4 @@
 import { BaseCommand } from '../../../base.command';
-// import { Dongle } from '../../../core/device/dongle';
 import { EnOceanManager } from '../../../core/enocean/manager';
 
 export default class Listen extends BaseCommand {
@@ -41,14 +40,5 @@ export default class Listen extends BaseCommand {
     // });
 
     manager.connect(port, { baudRate: baud });
-
-    // const dongle = new Dongle({
-    //   baud,
-    //   port,
-    // });
-
-    // dongle.open();
-
-    // console.log('Connecting to EnOcean dongle...');
   }
 }
