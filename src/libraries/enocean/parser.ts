@@ -1,3 +1,4 @@
+import { CRC8Calculator } from './bit-operations';
 import {
   ESP3Header,
   ESP3Packet,
@@ -96,7 +97,7 @@ export class EnOceanParser {
         totalPacketSize - 1,
       );
 
-      const calculatedChecksum = this.calculateCRC8(packetData);
+      const calculatedChecksum = CRC8Calculator.calculate(packetData);
 
       if (calculatedChecksum !== checksum) {
         console.warn(
@@ -171,36 +172,6 @@ export class EnOceanParser {
   }
 
   /**
-   * Calcule le CRC8 pour l'en-tête ESP3
-   * @param data - Données pour le calcul du CRC
-   * @returns Valeur CRC8
-   */
-  private calculateCRC8(data: Buffer): number {
-    let crc = 0;
-    const polynomial = 0x07; // Polynôme CRC8 pour EnOcean
-
-    for (const datum of data) {
-      // eslint-disable-next-line no-bitwise
-      crc ^= datum;
-      for (let j = 0; j < 8; j++) {
-        // eslint-disable-next-line no-bitwise
-        if (crc & 0x80) {
-          // eslint-disable-next-line no-bitwise
-          crc = (crc << 1) ^ polynomial;
-        } else {
-          // eslint-disable-next-line no-bitwise
-          crc <<= 1;
-        }
-
-        // eslint-disable-next-line no-bitwise
-        crc &= 0xff;
-      }
-    }
-
-    return crc;
-  }
-
-  /**
    * Parse l'en-tête d'un paquet ESP3
    * @param headerBuffer - Buffer contenant l'en-tête
    * @returns En-tête parsé ou null si invalide
@@ -222,7 +193,7 @@ export class EnOceanParser {
 
     // Vérification du CRC de l'en-tête
     const headerForCRC = headerBuffer.slice(1, 5);
-    const calculatedCRC = this.calculateCRC8(headerForCRC);
+    const calculatedCRC = CRC8Calculator.calculate(headerForCRC);
 
     if (calculatedCRC !== crc8Header) {
       console.warn(

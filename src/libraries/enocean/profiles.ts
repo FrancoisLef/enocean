@@ -1,6 +1,5 @@
-/* eslint-disable complexity */
 /* eslint-disable camelcase */
-/* eslint-disable no-bitwise */
+import { ByteFieldExtractor } from './bit-operations';
 import { RadioTelegram, RORG } from './types';
 
 /**
@@ -94,9 +93,9 @@ export class EEPDecoder {
         // D2
         // Pour D2-01-12, on vérifie la longueur des données et certains patterns
         if (telegram.data.length > 0) {
-          const command = (telegram.data[0] >> 4) & 0x0f;
-          // Commands typiques du D2-01-12: 1=switching, 2=dimming, 3=status
-          if ([1, 2, 3, 4].includes(command)) {
+          const command = ByteFieldExtractor.extractD2Command(telegram.data[0]);
+          // Commands typiques du D2-01-12: switching, dimming, status_request, status_response
+          if (command !== null) {
             return EEPProfile.D2_01_12;
           }
         }
@@ -140,38 +139,15 @@ export class EEPDecoder {
     }
 
     const cmdByte = telegram.data[0];
-    const commandCode = (cmdByte >> 4) & 0x0f;
+    const command = ByteFieldExtractor.extractD2Command(cmdByte);
 
-    let command: 'dimming' | 'status_request' | 'status_response' | 'switching';
-    switch (commandCode) {
-      case 1: {
-        command = 'switching';
-        break;
-      }
-
-      case 2: {
-        command = 'dimming';
-        break;
-      }
-
-      case 3: {
-        command = 'status_request';
-        break;
-      }
-
-      case 4: {
-        command = 'status_response';
-        break;
-      }
-
-      default: {
-        console.warn(`Commande D2-01-12 inconnue: ${commandCode}`);
-        return null;
-      }
+    if (command === null) {
+      console.warn(`Commande D2-01-12 inconnue: ${ByteFieldExtractor.extractChannel(cmdByte, 0xf0)}`);
+      return null;
     }
 
     // Canal (bits 3-0 du premier byte + éventuellement partie du second)
-    let channel = cmdByte & 0x0f;
+    let channel = ByteFieldExtractor.extractChannel(cmdByte);
 
     let outputValue = 0;
     let outputState = false;
@@ -181,7 +157,7 @@ export class EEPDecoder {
     switch (command) {
       case 'dimming': {
         if (telegram.data.length >= 3) {
-          channel = telegram.data[1] & 0x1f;
+          channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f);
           dimValue = telegram.data[2]; // 0-100%
           outputValue = dimValue;
           outputState = dimValue > 0;
@@ -205,7 +181,7 @@ export class EEPDecoder {
 
       case 'status_request': {
         if (telegram.data.length >= 2) {
-          channel = telegram.data[1] & 0x1f;
+          channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f);
         }
 
         break;
@@ -213,7 +189,7 @@ export class EEPDecoder {
 
       case 'status_response': {
         if (telegram.data.length >= 3) {
-          channel = telegram.data[1] & 0x1f;
+          channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f);
           outputValue = telegram.data[2]; // Valeur actuelle 0-100%
           outputState = outputValue > 0;
         }
@@ -225,11 +201,11 @@ export class EEPDecoder {
         if (telegram.data.length >= 2) {
           // Canal étendu si nécessaire
           if (telegram.data.length >= 3) {
-            channel = telegram.data[1] & 0x1f; // 5 bits pour le canal (0-29)
-            outputState = (telegram.data[2] & 0x01) === 1;
+            channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f); // 5 bits pour le canal (0-29)
+            outputState = ByteFieldExtractor.extractBooleanState(telegram.data[2]);
             outputValue = outputState ? 100 : 0;
           } else {
-            outputState = (telegram.data[1] & 0x01) === 1;
+            outputState = ByteFieldExtractor.extractBooleanState(telegram.data[1]);
             outputValue = outputState ? 100 : 0;
           }
         }
@@ -273,69 +249,19 @@ export class EEPDecoder {
     const dataByte = telegram.data[0];
 
     // Bits 7-6: Rocker A
-    const rockerABits = (dataByte >> 5) & 0x03;
-    let rockerA: 'down' | 'none' | 'up';
-    switch (rockerABits) {
-      case 0x00: {
-        rockerA = 'none';
-        break;
-      }
-
-      case 0x01: {
-        rockerA = 'up';
-        break;
-      }
-
-      case 0x02: {
-        rockerA = 'down';
-        break;
-      }
-
-      default: {
-        rockerA = 'none';
-        break;
-      }
-    }
+    const rockerA = ByteFieldExtractor.extractRockerPosition(dataByte, 5);
 
     // Bits 5-4: Energy bow (non utilisé dans F6-02-01 standard)
-    const energyBow = ((dataByte >> 4) & 0x01) === 1;
+    const energyBow = ByteFieldExtractor.extractBooleanState(dataByte, 4);
 
     // Bits 3-2: Rocker B
-
-    const rockerBBits = (dataByte >> 1) & 0x03;
-
-    let rockerB: 'down' | 'none' | 'up';
-
-    switch (rockerBBits) {
-      case 0x00: {
-        rockerB = 'none';
-        break;
-      }
-
-      case 0x01: {
-        rockerB = 'up';
-        break;
-      }
-
-      case 0x02: {
-        rockerB = 'down';
-        break;
-      }
-
-      default: {
-        rockerB = 'none';
-        break;
-      }
-    }
+    const rockerB = ByteFieldExtractor.extractRockerPosition(dataByte, 1);
 
     // Bit 1: Second action (non utilisé dans ce profil)
-    const secondAction = (Math.trunc(dataByte) & 0x01) === 1;
+    const secondAction = ByteFieldExtractor.extractBooleanState(dataByte, 0);
 
     // Déterminer l'action basée sur le bit T21 du status
-    const t21Bit = (telegram.status >> 5) & 0x01;
-
-    const rockerAction: 'pressed' | 'released' =
-      t21Bit === 1 ? 'pressed' : 'released';
+    const rockerAction = ByteFieldExtractor.extractRockerAction(telegram.status);
 
     return {
       energyBow,
