@@ -19,12 +19,12 @@ export class NodeSerialPortAdapter implements SerialPortAdapter {
     });
   }
 
-  static async listPorts(): Promise<string[]> {
+  public static async listPorts(): Promise<string[]> {
     const ports = await SerialPort.list();
     return ports.map((port) => port.path);
   }
 
-  async close(): Promise<void> {
+  public async close(): Promise<void> {
     if (this.serialPort.isOpen) {
       return new Promise<void>((resolve) => {
         this.serialPort.close(() => {
@@ -34,15 +34,15 @@ export class NodeSerialPortAdapter implements SerialPortAdapter {
     }
   }
 
-  isOpen(): boolean {
+  public isOpen(): boolean {
     return this.serialPort.isOpen;
   }
 
-  on(event: string, callback: (data: Buffer) => void): void {
+  public on(event: string, callback: (data: Buffer) => void): void {
     this.serialPort.on(event, callback);
   }
 
-  async open(): Promise<void> {
+  public async open(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.serialPort.open((error) => {
         if (error) {
@@ -54,7 +54,7 @@ export class NodeSerialPortAdapter implements SerialPortAdapter {
     });
   }
 
-  async write(data: Buffer): Promise<void> {
+  public async write(data: Buffer): Promise<void> {
     return new Promise((resolve, reject) => {
       this.serialPort.write(data, (error) => {
         if (error) {
