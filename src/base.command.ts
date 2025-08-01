@@ -1,6 +1,6 @@
 import { Command } from '@oclif/core';
 
-import { CacheStorage } from './infrastructure/storage/cache-storage';
+import { CacheStorage } from './infrastructure/storage';
 
 export abstract class BaseCommand extends Command {
   protected cache!: CacheStorage;

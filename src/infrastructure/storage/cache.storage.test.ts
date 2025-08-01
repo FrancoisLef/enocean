@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { CacheData, CacheStorage } from './cache-storage';
+import { CacheData, CacheStorage } from './index';
 
 describe('CacheStorage', () => {
   let tmpDir: string;

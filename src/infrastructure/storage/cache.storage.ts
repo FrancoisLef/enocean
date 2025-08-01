@@ -1,4 +1,4 @@
-import { FileStorage } from './file-storage';
+import { FileStorage } from './file.storage';
 
 export type CacheData = {
   'dongle:baud'?: number;
