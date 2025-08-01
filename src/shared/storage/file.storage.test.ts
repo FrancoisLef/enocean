@@ -192,7 +192,7 @@ describe('Storage', () => {
         .access(filePath)
         .then(() => true)
         .catch(() => false);
-      expect(fileExists).to.be.true;
+      expect(fileExists).to.equal(true);
 
       const fileContent = await fs.readFile(filePath, 'utf8');
       const parsedContent = JSON.parse(fileContent);
@@ -248,7 +248,7 @@ describe('Storage', () => {
         .access(filePath)
         .then(() => true)
         .catch(() => false);
-      expect(fileExists).to.be.true;
+      expect(fileExists).to.equal(true);
 
       const fileContent = await fs.readFile(filePath, 'utf8');
       expect(JSON.parse(fileContent)).to.deep.equal(testData);
