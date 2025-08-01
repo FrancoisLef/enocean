@@ -177,6 +177,62 @@ describe('CacheStorage', () => {
       const result = await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
       expect(result).to.equal(cacheStorage);
     });
+
+    it('sets multiple cache values with bulk update', async () => {
+      const result = await cacheStorage.set({
+        'dongle:baud': 57_600,
+        'dongle:configured': true,
+        'dongle:port': '/dev/ttyUSB0',
+      });
+
+      expect(result).to.equal(cacheStorage);
+      expect(cacheStorage.get('dongle:port')).to.equal('/dev/ttyUSB0');
+      expect(cacheStorage.get('dongle:baud')).to.equal(57_600);
+      expect(cacheStorage.get('dongle:configured')).to.equal(true);
+
+      // Verify all values were persisted to file
+      const cacheFilePath = path.join(tmpDir, 'cache.json');
+      const fileContent = await fs.readFile(cacheFilePath, 'utf8');
+      const parsedData = JSON.parse(fileContent);
+
+      expect(parsedData['dongle:port']).to.equal('/dev/ttyUSB0');
+      expect(parsedData['dongle:baud']).to.equal(57_600);
+      expect(parsedData['dongle:configured']).to.equal(true);
+    });
+
+    it('overwrites existing values with bulk update', async () => {
+      // Set initial values
+      await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
+      await cacheStorage.set('dongle:baud', 57_600);
+
+      // Bulk update with some overwritten and some new values
+      await cacheStorage.set({
+        'dongle:baud': 115_200,
+        'dongle:configured': true,
+        'dongle:port': '/dev/ttyUSB1',
+      });
+
+      expect(cacheStorage.get('dongle:port')).to.equal('/dev/ttyUSB1');
+      expect(cacheStorage.get('dongle:baud')).to.equal(115_200);
+      expect(cacheStorage.get('dongle:configured')).to.equal(true);
+    });
+
+    it('handles partial bulk updates', async () => {
+      // Set initial values
+      await cacheStorage.set('dongle:port', '/dev/ttyUSB0');
+      await cacheStorage.set('dongle:baud', 57_600);
+
+      // Partial bulk update
+      await cacheStorage.set({
+        'dongle:configured': true,
+      });
+
+      // Original values should remain unchanged
+      expect(cacheStorage.get('dongle:port')).to.equal('/dev/ttyUSB0');
+      expect(cacheStorage.get('dongle:baud')).to.equal(57_600);
+      // New value should be set
+      expect(cacheStorage.get('dongle:configured')).to.equal(true);
+    });
   });
 
   describe('integration', () => {

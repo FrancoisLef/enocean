@@ -33,12 +33,22 @@ export class CacheStorage {
     return this;
   }
 
+  public async set(data: Partial<CacheData>): Promise<CacheStorage>;
   public async set<T extends CacheKey>(
     key: T,
     value: CacheData[T],
+  ): Promise<CacheStorage>;
+  public async set<T extends CacheKey>(
+    keyOrData: Partial<CacheData> | T,
+    value?: CacheData[T],
   ): Promise<CacheStorage> {
-    // Update cache value
-    this.cache[key] = value;
+    if (typeof keyOrData === 'string') {
+      // Single key-value pair
+      this.cache[keyOrData] = value!;
+    } else {
+      // Bulk update with object
+      Object.assign(this.cache, keyOrData);
+    }
 
     // Write the updated cache back to the file
     await this.storage.writeJSON<CacheData>(this.cache, this.cacheFile);

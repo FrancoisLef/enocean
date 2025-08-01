@@ -39,9 +39,11 @@ export default class Configure extends BaseCommand {
         message: 'Enter the baud rate:',
       })) ?? 57_600;
 
-    await this.cache.set('dongle:port', port);
-    await this.cache.set('dongle:baud', baud);
-    await this.cache.set('dongle:configured', true);
+    await this.cache.set({
+      'dongle:baud': baud,
+      'dongle:configured': true,
+      'dongle:port': port,
+    });
 
     this.log(chalk.green('✔'), chalk.bold('Dongle is configured'));
   }
