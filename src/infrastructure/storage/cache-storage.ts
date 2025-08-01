@@ -1,4 +1,4 @@
-import { FileStorage } from '../../infrastructure/storage/file-storage';
+import { FileStorage } from './file-storage';
 
 export type CacheData = {
   'dongle:baud'?: number;
@@ -8,7 +8,7 @@ export type CacheData = {
 
 export type CacheKey = keyof CacheData;
 
-export class Cache {
+export class CacheStorage {
   private cache: CacheData;
   private cacheFile: string;
   private storage: FileStorage;
@@ -23,7 +23,7 @@ export class Cache {
     return this.cache[key];
   }
 
-  public async init(): Promise<Cache> {
+  public async init(): Promise<CacheStorage> {
     // Ensure the cache file exists
     await this.storage.accessFile(this.cacheFile);
 
@@ -36,7 +36,7 @@ export class Cache {
   public async set<T extends CacheKey>(
     key: T,
     value: CacheData[T],
-  ): Promise<Cache> {
+  ): Promise<CacheStorage> {
     // Update cache value
     this.cache[key] = value;
 

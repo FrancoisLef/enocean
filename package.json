@@ -26,7 +26,7 @@
     "lint": "eslint",
     "prepack": "oclif manifest && oclif readme",
     "postpack": "shx rm -f oclif.manifest.json",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\" \"src/**/*.test.ts\"",
     "posttest": "npm run lint",
     "version": "oclif readme && git add README.md"
   },

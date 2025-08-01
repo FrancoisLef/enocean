@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { FileStorage } from '../../src/infrastructure/storage/file-storage';
+import { FileStorage } from './file-storage';
 
 describe('Storage', () => {
   let tmpDir: string;

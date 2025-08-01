@@ -1,9 +1,9 @@
 import { Command } from '@oclif/core';
 
-import { Cache } from './core/config/configuration';
+import { CacheStorage } from './infrastructure/storage/cache-storage';
 
 export abstract class BaseCommand extends Command {
-  protected cache!: Cache;
+  protected cache!: CacheStorage;
 
   protected async catch(err: Error & { exitCode?: number }): Promise<void> {
     // The ExitPromptError can be thrown by inquirer when the user exits a prompt gracefully (e.g., by pressing Ctrl+C).
@@ -18,7 +18,7 @@ export abstract class BaseCommand extends Command {
   public async init(): Promise<void> {
     // Initialize the cache
     if (!this.cache) {
-      this.cache = await new Cache({
+      this.cache = await new CacheStorage({
         cacheDir: this.config.cacheDir,
       }).init();
     }
