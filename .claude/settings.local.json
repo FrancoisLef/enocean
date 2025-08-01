@@ -10,7 +10,11 @@
       "Bash(npm test)",
       "Bash(npm run test:*)",
       "Bash(rm:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(npm run format:*)"
     ],
     "deny": []
   }

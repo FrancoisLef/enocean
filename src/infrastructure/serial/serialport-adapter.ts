@@ -11,7 +11,15 @@ export interface SerialPortAdapter {
 export class NodeSerialPortAdapter implements SerialPortAdapter {
   private serialPort: SerialPort;
 
-  constructor(private path: string, private config: { baudRate: number; dataBits?: 5 | 6 | 7 | 8; parity?: 'even' | 'none' | 'odd'; stopBits?: 1 | 2 }) {
+  constructor(
+    private path: string,
+    private config: {
+      baudRate: number;
+      dataBits?: 5 | 6 | 7 | 8;
+      parity?: 'even' | 'none' | 'odd';
+      stopBits?: 1 | 2;
+    },
+  ) {
     this.serialPort = new SerialPort({
       autoOpen: false,
       path: this.path,
@@ -46,7 +54,9 @@ export class NodeSerialPortAdapter implements SerialPortAdapter {
     return new Promise<void>((resolve, reject) => {
       this.serialPort.open((error) => {
         if (error) {
-          reject(new Error(`Unable to open port ${this.path}: ${error.message}`));
+          reject(
+            new Error(`Unable to open port ${this.path}: ${error.message}`),
+          );
         } else {
           resolve();
         }

@@ -100,11 +100,11 @@ describe('Storage', () => {
     it('reads and parses JSON from existing file', async () => {
       const filename = 'test-read.json';
       const filePath = path.join(tmpDir, filename);
-      const testData = { 
-        active: true, 
-        name: 'test', 
+      const testData = {
+        active: true,
+        name: 'test',
         nested: { key: 'value' },
-        value: 42
+        value: 42,
       };
 
       // Create file with test data
@@ -136,7 +136,7 @@ describe('Storage', () => {
         null: null,
         number: 123,
         object: { nested: true },
-        string: 'text'
+        string: 'text',
       };
 
       await fs.writeFile(filePath, JSON.stringify(testData), 'utf8');
@@ -176,10 +176,10 @@ describe('Storage', () => {
     it('writes and formats JSON to file', async () => {
       const filename = 'test-write.json';
       const filePath = path.join(tmpDir, filename);
-      const testData = { 
-        active: true, 
-        name: 'test', 
-        value: 42 
+      const testData = {
+        active: true,
+        name: 'test',
+        value: 42,
       };
 
       // Write data
@@ -189,7 +189,10 @@ describe('Storage', () => {
       expect(result).to.deep.equal(testData);
 
       // Verify file was created and contains correct data
-      const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
+      const fileExists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
       expect(fileExists).to.be.true;
 
       const fileContent = await fs.readFile(filePath, 'utf8');
@@ -242,7 +245,10 @@ describe('Storage', () => {
 
       // Verify file was created
       const filePath = path.join(nestedPath, filename);
-      const fileExists = await fs.access(filePath).then(() => true).catch(() => false);
+      const fileExists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
       expect(fileExists).to.be.true;
 
       const fileContent = await fs.readFile(filePath, 'utf8');
@@ -269,14 +275,14 @@ describe('Storage', () => {
           level2: {
             level3: {
               array: [1, 2, { nested: true }],
-              mixed: [null, false, "string", 42]
-            }
-          }
+              mixed: [null, false, 'string', 42],
+            },
+          },
         },
         metadata: {
           created: '2023-01-01',
-          tags: ['test', 'storage', 'json']
-        }
+          tags: ['test', 'storage', 'json'],
+        },
       };
 
       await storage.writeJSON(testData, tmpDir, filename);
@@ -294,10 +300,10 @@ describe('Storage', () => {
         integration: 'test',
         nested: {
           deep: {
-            value: 'success'
-          }
+            value: 'success',
+          },
         },
-        numbers: [1, 2, 3, 4, 5]
+        numbers: [1, 2, 3, 4, 5],
       };
 
       // Write data
