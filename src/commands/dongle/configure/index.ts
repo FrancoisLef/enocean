@@ -1,24 +1,25 @@
 import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
+import { SerialPort } from 'serialport';
 
 import { BaseCommand } from '../../../base.command';
-import { NodeSerialPortAdapter } from '../../../shared/serial';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure dongle';
   static examples = [`<%= config.bin %> <%= command.id %> --help`];
 
   async run(): Promise<void> {
-    const ports = await NodeSerialPortAdapter.listPorts();
+    const ports = await SerialPort.list();
+    const portPaths = ports.map((port) => port.path);
 
     const port = await select<string>({
-      choices: ports.map((port) => ({
+      choices: portPaths.map((portPath) => ({
         name:
-          port === this.cache.get('dongle:port')
-            ? `${chalk.bold(port)} ${chalk.italic.dim('(default)')}`
-            : port,
-        short: port,
-        value: port,
+          portPath === this.cache.get('dongle:port')
+            ? `${chalk.bold(portPath)} ${chalk.italic.dim('(default)')}`
+            : portPath,
+        short: portPath,
+        value: portPath,
       })),
       default: this.cache.get('dongle:port'),
       instructions: {

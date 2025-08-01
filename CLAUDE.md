@@ -27,7 +27,6 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
     - `types.ts`: TypeScript definitions for EnOcean protocol structures
 - **Shared** (`src/shared/`): External system adapters:
   - `storage/file-storage.ts`: File system operations implementation
-  - `serial/serialport.adapter.ts`: Serial port communication abstraction
 
 ### Key Architectural Patterns
 
@@ -56,7 +55,7 @@ await manager.connect('/dev/ttyUSB0', { baudRate: 57600 });
 
 ### Data Flow
 
-1. User configures dongle via `dongle configure` command (stores port/baud in cache using NodeSerialPortAdapter.listPorts())
+1. User configures dongle via `dongle configure` command (stores port/baud in cache using SerialPort.list())
 2. `dongle listen` command reads configuration and initializes `EnOceanManager`
 3. Manager connects directly to serial port using SerialPort and listens for ESP3 packets
 4. Incoming data is parsed and decoded using EEP profiles
@@ -65,7 +64,7 @@ await manager.connect('/dev/ttyUSB0', { baudRate: 57600 });
 ## Important Notes
 
 - **Framework Separation**: Core EnOcean logic is completely independent of OCLIF CLI framework
-- **SerialPort Abstraction**: Uses adapter pattern for serial communication (easy to mock for testing)
+- **Direct SerialPort Usage**: Uses SerialPort directly for communication
 - **Storage Abstraction**: File operations are abstracted through shared layer
 - **Supports TCM 310 USB dongles** with 57,600 baud default
 - **Cache files** are stored in OCLIF's cache directory (CLI-specific concern)
