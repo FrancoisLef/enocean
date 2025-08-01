@@ -1,4 +1,4 @@
-import { Storage } from './storage.connector';
+import { FileStorage } from '../../infrastructure/storage/file-storage';
 
 export type CacheData = {
   'dongle:baud'?: number;
@@ -11,12 +11,12 @@ export type CacheKey = keyof CacheData;
 export class Cache {
   private cache: CacheData;
   private cacheFile: string;
-  private storage: Storage;
+  private storage: FileStorage;
 
   constructor({ cacheDir }: { cacheDir: string }) {
     this.cache = {};
     this.cacheFile = `${cacheDir}/cache.json`;
-    this.storage = new Storage();
+    this.storage = new FileStorage();
   }
 
   public get<T extends CacheKey>(key: T): CacheData[T] {

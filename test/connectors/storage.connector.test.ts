@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { Storage } from '../../src/connectors/storage.connector';
+import { FileStorage } from '../../src/infrastructure/storage/file-storage';
 
 describe('Storage', () => {
   let tmpDir: string;
-  let storage: Storage;
+  let storage: FileStorage;
 
   beforeEach(async () => {
-    storage = new Storage();
+    storage = new FileStorage();
     // Create a unique temporary directory next to the test file
     tmpDir = path.join(
       __dirname,

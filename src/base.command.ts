@@ -1,6 +1,6 @@
 import { Command } from '@oclif/core';
 
-import { Cache } from './connectors/cache.connector';
+import { Cache } from './core/config/configuration';
 
 export abstract class BaseCommand extends Command {
   protected cache!: Cache;

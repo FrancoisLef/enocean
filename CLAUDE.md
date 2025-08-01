@@ -19,22 +19,45 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
 
 - **Base Command** (`src/base.command.ts`): Abstract base class for all CLI commands that provides cache initialization and error handling
 - **Commands** (`src/commands/`): OCLIF command implementations organized by topic (e.g., `dongle/configure`, `dongle/listen`)
-- **Connectors** (`src/connectors/`): Abstraction layer for external systems:
-  - `cache.connector.ts`: Manages persistent configuration storage
-  - `dongle.connector.ts`: Low-level serial port communication wrapper
-  - `storage.connector.ts`: File system operations abstraction
-- **Libraries** (`src/libraries/enocean/`): Core EnOcean protocol implementation:
-  - `manager.ts`: Main EnOcean communication manager with event handling
-  - `parser.ts`: ESP3 packet parsing logic
-  - `profiles.ts`: EEP (EnOcean Equipment Profile) decoder
-  - `types.ts`: TypeScript definitions for EnOcean protocol structures
+- **Core** (`src/core/`): Framework-agnostic business logic:
+  - `enocean/`: Core EnOcean protocol implementation
+    - `manager.ts`: Main EnOcean communication manager with event handling
+    - `parser.ts`: ESP3 packet parsing logic
+    - `profiles.ts`: EEP (EnOcean Equipment Profile) decoder
+    - `types.ts`: TypeScript definitions for EnOcean protocol structures
+  - `device/`: Hardware abstraction layer
+    - `dongle.ts`: EnOcean dongle management (uses infrastructure adapters)
+  - `config/`: Configuration management
+    - `configuration.ts`: Cache-based configuration storage
+- **Infrastructure** (`src/infrastructure/`): External system adapters:
+  - `storage/file-storage.ts`: File system operations implementation
+  - `serial/serialport-adapter.ts`: Serial port communication abstraction
 
 ### Key Architectural Patterns
 
+- **Clean Architecture**: Clear separation between CLI layer, core business logic, and infrastructure
 - **Event-driven**: The `EnOceanManager` extends `EventEmitter` to handle telegram reception
 - **OCLIF Framework**: Commands follow OCLIF conventions with static descriptions and examples
-- **Cache-based Configuration**: Dongle settings are persisted using the cache connector
+- **Dependency Inversion**: Core logic depends on abstractions, not concrete implementations
+- **Framework Agnostic Core**: Business logic can be used in any context (CLI, web, desktop, etc.)
 - **TypeScript**: Fully typed codebase with strict type checking
+
+### Library Usage (Non-CLI)
+
+The core functionality can be used independently of the CLI:
+
+```typescript
+import { EnOceanManager, Dongle } from 'enocean';
+
+// Use in any application context
+const manager = new EnOceanManager();
+manager.on('eepData', (data) => {
+  console.log('Received data:', data);
+});
+
+const dongle = new Dongle({ port: '/dev/ttyUSB0', baud: 57600 });
+await dongle.open();
+```
 
 ### Data Flow
 
@@ -46,8 +69,10 @@ This is an EnOcean CLI tool built with OCLIF for managing EnOcean dongles and li
 
 ## Important Notes
 
-- Uses SerialPort library for USB dongle communication
-- Supports TCM 310 USB dongles with 57,600 baud default
-- Cache files are stored in OCLIF's cache directory
-- Commands require dongle to be configured before use
-- French comments and console output (this is intentional for the target users)
+- **Framework Separation**: Core EnOcean logic is completely independent of OCLIF CLI framework
+- **SerialPort Abstraction**: Uses adapter pattern for serial communication (easy to mock for testing)
+- **Storage Abstraction**: File operations are abstracted through infrastructure layer
+- **Supports TCM 310 USB dongles** with 57,600 baud default
+- **Cache files** are stored in OCLIF's cache directory (CLI-specific concern)
+- **Commands require dongle** to be configured before use
+- **French comments and console output** (intentional for target users)

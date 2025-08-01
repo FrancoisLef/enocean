@@ -1,7 +1,6 @@
 import { BaseCommand } from '../../../base.command';
-// import { Dongle } from '../../../connectors/dongle.connector';
-import { EnOceanManager } from '../../../libraries/enocean/manager';
-import { EEPDecoder } from '../../../libraries/enocean/profiles';
+// import { Dongle } from '../../../core/device/dongle';
+import { EnOceanManager } from '../../../core/enocean/manager';
 
 export default class Listen extends BaseCommand {
   static description = 'Listen for telegrams';

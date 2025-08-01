@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-export class Storage {
+export class FileStorage {
   /**
    * Ensures that a file exists at the specified path.
    * If the file does not exist, it creates the file and initializes it with an empty object.

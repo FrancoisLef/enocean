@@ -2,7 +2,7 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 
 import { BaseCommand } from '../../../base.command';
-import { Dongle } from '../../../connectors/dongle.connector';
+import { Dongle } from '../../../core/device/dongle';
 
 export default class Configure extends BaseCommand {
   static description = 'Configure dongle';
