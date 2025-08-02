@@ -5,6 +5,7 @@
 /dist
 /tmp
 /node_modules
+tsconfig.tsbuildinfo
 oclif.manifest.json
 src/shared/storage/tmp
 
