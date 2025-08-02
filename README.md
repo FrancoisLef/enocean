@@ -20,7 +20,7 @@ $ npm install -g enocean
 $ enocean COMMAND
 running command...
 $ enocean (--version)
-enocean/0.0.0 linux-x64 node-v20.19.4
+enocean/0.0.0 darwin-arm64 node-v24.2.0
 $ enocean --help [COMMAND]
 USAGE
   $ enocean COMMAND
@@ -31,7 +31,25 @@ USAGE
 # Commands
 
 <!-- commands -->
+* [`enocean configure`](#enocean-configure)
 * [`enocean help [COMMAND]`](#enocean-help-command)
+* [`enocean listen`](#enocean-listen)
+* [`enocean version`](#enocean-version)
+
+## `enocean configure`
+
+Configure dongle
+
+```
+USAGE
+  $ enocean configure
+
+DESCRIPTION
+  Configure dongle
+
+EXAMPLES
+  $ enocean configure --help
+```
 
 ## `enocean help [COMMAND]`
 
@@ -52,4 +70,39 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.29/src/commands/help.ts)_
+
+## `enocean listen`
+
+Listen for telegrams
+
+```
+USAGE
+  $ enocean listen
+
+DESCRIPTION
+  Listen for telegrams
+
+EXAMPLES
+  $ enocean listen
+```
+
+## `enocean version`
+
+```
+USAGE
+  $ enocean version [--json] [--verbose]
+
+FLAGS
+  --verbose  Show additional information about the CLI.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+FLAG DESCRIPTIONS
+  --verbose  Show additional information about the CLI.
+
+    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
+```
+
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.32/src/commands/version.ts)_
 <!-- commandsstop -->
