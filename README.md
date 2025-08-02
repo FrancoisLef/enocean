@@ -3,8 +3,8 @@
 A new CLI generated with oclif
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/enocean.svg)](https://npmjs.org/package/enocean)
-[![Downloads/week](https://img.shields.io/npm/dw/enocean.svg)](https://npmjs.org/package/enocean)
+[![Version](https://img.shields.io/npm/v/enocean.svg)](https://npmjs.org/package/enocean-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/enocean.svg)](https://npmjs.org/package/enocean-cli)
 
 <!-- toc -->
 * [enocean](#enocean)
@@ -31,10 +31,13 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`enocean configure`](#enocean-configure)
-* [`enocean help [COMMAND]`](#enocean-help-command)
-* [`enocean listen`](#enocean-listen)
-* [`enocean version`](#enocean-version)
+- [enocean](#enocean)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`enocean configure`](#enocean-configure)
+  - [`enocean help [COMMAND]`](#enocean-help-command)
+  - [`enocean listen`](#enocean-listen)
+  - [`enocean version`](#enocean-version)
 
 ## `enocean configure`
 
