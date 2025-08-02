@@ -1,4 +1,4 @@
-name: publish
+name: 📦 NPM publish
 
 on:
   release:
