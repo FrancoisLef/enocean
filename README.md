@@ -3,8 +3,8 @@
 A new CLI generated with oclif
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/enocean.svg)](https://npmjs.org/package/enocean-cli)
-[![Downloads/week](https://img.shields.io/npm/dw/enocean.svg)](https://npmjs.org/package/enocean-cli)
+[![Version](https://img.shields.io/npm/v/enocean-cli.svg)](https://npmjs.org/package/enocean-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/enocean-cli.svg)](https://npmjs.org/package/enocean-cli)
 
 <!-- toc -->
 * [enocean](#enocean)
