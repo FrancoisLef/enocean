@@ -22,7 +22,7 @@
     "./oclif.manifest.json"
   ],
   "scripts": {
-    "build": "shx rm -rf dist && shx rm tsconfig.tsbuildinfo && tsc -b",
+    "build": "shx rm -rf dist && rm -f tsconfig.tsbuildinfo && tsc -b",
     "format": "prettier --write .",
     "lint": "eslint",
     "prepack": "oclif manifest && oclif readme",
