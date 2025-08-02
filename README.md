@@ -20,7 +20,7 @@ $ npm install -g enocean
 $ enocean COMMAND
 running command...
 $ enocean (--version)
-enocean/0.1.0 darwin-arm64 node-v24.2.0
+enocean/0.1.1 darwin-arm64 node-v24.2.0
 $ enocean --help [COMMAND]
 USAGE
   $ enocean COMMAND
