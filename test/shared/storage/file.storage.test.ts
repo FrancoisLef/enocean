@@ -1,8 +1,10 @@
 import { expect } from 'chai';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('node:fs/promises');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('node:path');
 
-import { FileStorage } from './index';
+import { FileStorage } from '../../../src/shared/storage/file.storage';
 
 describe('Storage', () => {
   let tmpDir: string;

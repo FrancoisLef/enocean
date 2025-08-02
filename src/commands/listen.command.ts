@@ -1,7 +1,7 @@
-import { BaseCommand } from '../base.command';
 import { EnOceanManager } from '../libraries/enocean/manager';
+import { BaseCommand } from './base.command';
 
-export default class Listen extends BaseCommand {
+export class Listen extends BaseCommand {
   static description = 'Listen for telegrams';
   static examples = ['<%= config.bin %> <%= command.id %>'];
 

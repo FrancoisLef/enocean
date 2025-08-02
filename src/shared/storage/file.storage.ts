@@ -1,5 +1,7 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('node:fs/promises');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('node:path');
 
 export class FileStorage {
   /**

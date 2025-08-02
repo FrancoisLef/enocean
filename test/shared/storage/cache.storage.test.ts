@@ -1,8 +1,13 @@
 import { expect } from 'chai';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const fs = require('node:fs/promises');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const path = require('node:path');
 
-import { CacheData, CacheStorage } from './index';
+import {
+  CacheData,
+  CacheStorage,
+} from '../../../src/shared/storage/cache.storage';
 
 describe('CacheStorage', () => {
   let tmpDir: string;

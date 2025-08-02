@@ -1,9 +1,10 @@
 {
   "name": "enocean",
   "version": "0.0.0",
-  "description": "A new CLI generated with oclif",
+  "description": "EnOcean CLI tool to manage EnOcean dongle and devices",
   "keywords": [
-    "oclif"
+    "enocean",
+    "cli"
   ],
   "homepage": "https://github.com/FrancoisLef/enocean",
   "bugs": "https://github.com/FrancoisLef/enocean/issues",
@@ -26,28 +27,28 @@
     "lint": "eslint",
     "prepack": "oclif manifest && oclif readme",
     "postpack": "shx rm -f oclif.manifest.json",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\" \"src/**/*.test.ts\"",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "posttest": "npm run lint",
     "version": "oclif readme && git add README.md"
   },
   "oclif": {
     "bin": "enocean",
-    "commands": "./dist/commands",
+    "commands": {
+      "strategy": "explicit",
+      "target": "./dist/commands/index.js"
+    },
     "dirname": "enocean",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
     ],
-    "topicSeparator": ":",
-    "topics": {
-      "dongle": {
-        "description": "Manage EnOcean dongle"
-      }
-    }
+    "topicSeparator": ":"
   },
   "dependencies": {
     "@inquirer/prompts": "7.5.3",
     "@oclif/core": "4.4.0",
     "@oclif/plugin-help": "6.2.29",
+    "@oclif/plugin-plugins": "5.4.46",
     "chalk": "5.4.1",
     "serialport": "13.0.0"
   },
