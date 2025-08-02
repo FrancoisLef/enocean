@@ -31,13 +31,10 @@ USAGE
 # Commands
 
 <!-- commands -->
-- [enocean](#enocean)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`enocean configure`](#enocean-configure)
-  - [`enocean help [COMMAND]`](#enocean-help-command)
-  - [`enocean listen`](#enocean-listen)
-  - [`enocean version`](#enocean-version)
+* [`enocean configure`](#enocean-configure)
+* [`enocean help [COMMAND]`](#enocean-help-command)
+* [`enocean listen`](#enocean-listen)
+* [`enocean version`](#enocean-version)
 
 ## `enocean configure`
 
