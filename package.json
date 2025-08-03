@@ -1,6 +1,6 @@
 {
   "name": "enocean-cli",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "EnOcean CLI tool to manage EnOcean dongle and devices",
   "keywords": [
     "enocean",
@@ -11,6 +11,7 @@
   "repository": "FrancoisLef/enocean",
   "license": "MIT",
   "author": "François Lefebvre",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
