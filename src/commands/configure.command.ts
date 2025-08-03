@@ -1,5 +1,4 @@
 import { number, select } from '@inquirer/prompts';
-import chalk from 'chalk';
 import { SerialPort } from 'serialport';
 
 import { BaseCommand } from './base.command';
@@ -16,16 +15,14 @@ export class Configure extends BaseCommand {
       choices: portPaths.map((portPath) => ({
         name:
           portPath === this.cache.get('dongle:port')
-            ? `${chalk.bold(portPath)} ${chalk.italic.dim('(default)')}`
+            ? `${portPath} (default)`
             : portPath,
         short: portPath,
         value: portPath,
       })),
       default: this.cache.get('dongle:port'),
       instructions: {
-        navigation: chalk.italic(
-          `<↑ ↓> arrow keys to navigate and <enter> to confirm.`,
-        ),
+        navigation: '<↑ ↓> arrow keys to navigate and <enter> to confirm.',
         pager: 'More options available (use arrow keys ↑ ↓)',
       },
       message: 'Select a serial port to use:',
@@ -46,6 +43,6 @@ export class Configure extends BaseCommand {
       'dongle:port': port,
     });
 
-    this.log(chalk.green('✔'), chalk.bold('Dongle is configured'));
+    this.log(`✔ Dongle is configured`);
   }
 }

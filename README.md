@@ -7,34 +7,38 @@ A new CLI generated with oclif
 [![Downloads/week](https://img.shields.io/npm/dw/enocean-cli.svg)](https://npmjs.org/package/enocean-cli)
 
 <!-- toc -->
-* [enocean](#enocean)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [enocean](#enocean)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g enocean-cli
 $ enocean COMMAND
 running command...
 $ enocean (--version)
-enocean-cli/0.3.2 linux-x64 node-v24.4.1
+enocean-cli/0.3.3 darwin-arm64 node-v24.2.0
 $ enocean --help [COMMAND]
 USAGE
   $ enocean COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`enocean configure`](#enocean-configure)
-* [`enocean help [COMMAND]`](#enocean-help-command)
-* [`enocean listen`](#enocean-listen)
-* [`enocean version`](#enocean-version)
+
+- [`enocean configure`](#enocean-configure)
+- [`enocean help [COMMAND]`](#enocean-help-command)
+- [`enocean listen`](#enocean-listen)
+- [`enocean version`](#enocean-version)
 
 ## `enocean configure`
 
@@ -105,4 +109,5 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.32/src/commands/version.ts)_
+
 <!-- commandsstop -->
