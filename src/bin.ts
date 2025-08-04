@@ -4,6 +4,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { configure } from './commands/configure.js';
 import { listen } from './commands/listen.js';
+import { update } from './commands/update.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
@@ -18,5 +19,7 @@ program
 program.command('configure').description('Configure dongle').action(configure);
 
 program.command('listen').description('Listen for telegrams').action(listen);
+
+program.command('update').description('Check for CLI updates').action(update);
 
 program.parse();
