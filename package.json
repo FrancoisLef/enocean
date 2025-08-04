@@ -1,6 +1,6 @@
 {
   "name": "enocean-cli",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "EnOcean CLI tool to manage EnOcean dongle and devices",
   "keywords": [
     "enocean",
