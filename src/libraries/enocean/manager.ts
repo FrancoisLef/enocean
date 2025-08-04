@@ -1,15 +1,15 @@
 import { EventEmitter } from 'node:events';
 import { SerialPort } from 'serialport';
 
-import { EnOceanParser } from './parser';
-import { EEPDecoder } from './profiles';
+import { EnOceanParser } from './parser.js';
+import { EEPDecoder } from './profiles.js';
 import {
   ESP3Packet,
   PacketType,
   RadioTelegram,
   RORG,
   SerialConfig,
-} from './types';
+} from './types.js';
 
 /**
  * Gestionnaire principal pour la communication EnOcean

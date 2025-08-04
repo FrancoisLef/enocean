@@ -1,11 +1,11 @@
-import { CRC8Calculator } from './bit-operations';
+import { CRC8Calculator } from './bit-operations.js';
 import {
   ESP3Header,
   ESP3Packet,
   PacketType,
   RadioTelegram,
   RORG,
-} from './types';
+} from './types.js';
 
 /**
  * Classe pour parser les paquets EnOcean ESP3

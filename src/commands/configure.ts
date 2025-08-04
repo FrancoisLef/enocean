@@ -1,26 +1,23 @@
 import { number, select } from '@inquirer/prompts';
 import { SerialPort } from 'serialport';
+import { getCache, handleError } from '../shared/cli-utils.js';
 
-import { BaseCommand } from './base.command';
-
-export class Configure extends BaseCommand {
-  static description = 'Configure dongle';
-  static examples = [`<%= config.bin %> <%= command.id %> --help`];
-
-  async run(): Promise<void> {
+export async function configure(): Promise<void> {
+  try {
+    const cache = await getCache();
     const ports = await SerialPort.list();
     const portPaths = ports.map((port) => port.path);
 
     const port = await select<string>({
       choices: portPaths.map((portPath) => ({
         name:
-          portPath === this.cache.get('dongle:port')
+          portPath === cache.get('dongle:port')
             ? `${portPath} (default)`
             : portPath,
         short: portPath,
         value: portPath,
       })),
-      default: this.cache.get('dongle:port'),
+      default: cache.get('dongle:port'),
       instructions: {
         navigation: '<↑ ↓> arrow keys to navigate and <enter> to confirm.',
         pager: 'More options available (use arrow keys ↑ ↓)',
@@ -33,16 +30,18 @@ export class Configure extends BaseCommand {
 
     const baud =
       (await number({
-        default: this.cache.get('dongle:baud') || 57_600,
+        default: cache.get('dongle:baud') || 57_600,
         message: 'Enter the baud rate:',
       })) ?? 57_600;
 
-    await this.cache.set({
+    await cache.set({
       'dongle:baud': baud,
       'dongle:configured': true,
       'dongle:port': port,
     });
 
-    this.log(`✔ Dongle is configured`);
+    console.log(`✔ Dongle is configured`);
+  } catch (error) {
+    handleError(error as Error);
   }
 }

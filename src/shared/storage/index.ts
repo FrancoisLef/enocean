@@ -1,3 +1,3 @@
 // Storage module exports
-export { CacheData, CacheKey, CacheStorage } from './cache.storage';
-export { FileStorage } from './file.storage';
+export { CacheStorage } from './cache.storage.js';
+export { FileStorage } from './file.storage.js';

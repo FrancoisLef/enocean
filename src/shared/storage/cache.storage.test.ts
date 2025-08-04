@@ -1,13 +1,11 @@
-import { expect } from 'chai';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const fs = require('node:fs/promises');
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const path = require('node:path');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { beforeEach, afterEach, describe, it, expect } from 'vitest';
 
 import {
   CacheData,
   CacheStorage,
-} from '../../../src/shared/storage/cache.storage';
+} from './cache.storage.js';
 
 describe('CacheStorage', () => {
   let tmpDir: string;
@@ -16,7 +14,7 @@ describe('CacheStorage', () => {
   beforeEach(async () => {
     // Create a unique temporary directory
     tmpDir = path.join(
-      __dirname,
+      process.cwd(),
       'tmp',
       `cache-test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );

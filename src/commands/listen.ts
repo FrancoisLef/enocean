@@ -1,22 +1,21 @@
-import { EnOceanManager } from '../libraries/enocean/manager';
-import { BaseCommand } from './base.command';
+import { EnOceanManager } from '../libraries/enocean/manager.js';
+import { getCache, handleError } from '../shared/cli-utils.js';
 
-export class Listen extends BaseCommand {
-  static description = 'Listen for telegrams';
-  static examples = ['<%= config.bin %> <%= command.id %>'];
-
-  public async run(): Promise<void> {
+export async function listen(): Promise<void> {
+  try {
+    const cache = await getCache();
     const {
       'dongle:baud': baud,
       'dongle:configured': isConfigured,
       'dongle:port': port,
-    } = this.cache.getAll();
+    } = cache.getAll();
 
     if (!isConfigured || !port || !baud) {
-      this.error('The dongle is not configured', {
-        code: 'dongle_not_configured',
-        suggestions: ['Run `configure` to set up the dongle.'],
-      });
+      console.error('Error: The dongle is not configured');
+      console.error(
+        'Suggestion: Run `enocean configure` to set up the dongle.',
+      );
+      process.exit(1);
     }
 
     const manager = new EnOceanManager();
@@ -42,5 +41,7 @@ export class Listen extends BaseCommand {
     // });
 
     manager.connect(port, { baudRate: baud });
+  } catch (error) {
+    handleError(error as Error);
   }
 }

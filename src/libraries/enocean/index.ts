@@ -3,8 +3,8 @@ export {
   BitOperations,
   ByteFieldExtractor,
   CRC8Calculator,
-} from './bit-operations';
-export { EnOceanManager } from './manager';
-export { EnOceanParser } from './parser';
-export { EEPDecoder } from './profiles';
-export * from './types';
+} from './bit-operations.js';
+export { EnOceanManager } from './manager.js';
+export { EnOceanParser } from './parser.js';
+export { EEPDecoder } from './profiles.js';
+export * from './types.js';

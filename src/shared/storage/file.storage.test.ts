@@ -1,10 +1,8 @@
-import { expect } from 'chai';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const fs = require('node:fs/promises');
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const path = require('node:path');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { beforeEach, afterEach, describe, it, expect } from 'vitest';
 
-import { FileStorage } from '../../../src/shared/storage/file.storage';
+import { FileStorage } from './file.storage.js';
 
 describe('Storage', () => {
   let tmpDir: string;
@@ -14,7 +12,7 @@ describe('Storage', () => {
     storage = new FileStorage();
     // Create a unique temporary directory next to the test file
     tmpDir = path.join(
-      __dirname,
+      process.cwd(),
       'tmp',
       `test-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     );

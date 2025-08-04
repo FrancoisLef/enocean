@@ -1,22 +1,42 @@
-import { includeIgnoreFile } from '@eslint/compat';
-import oclif from 'eslint-config-oclif';
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const gitignorePath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '.gitignore',
-);
 
 export default [
-  includeIgnoreFile(gitignorePath),
-  ...oclif,
+  js.configs.recommended,
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        global: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+        exports: 'readonly',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
   prettier,
   {
-    rules: {
-      // Turn off to support Node 18. You can remove this rule if you don't need to support Node 18.
-      'unicorn/prefer-module': 'off',
-    },
+    ignores: ['dist/', 'node_modules/', 'binaries/', 'tmp/'],
   },
 ];

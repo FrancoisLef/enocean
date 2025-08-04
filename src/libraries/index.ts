@@ -1,1 +1,1 @@
-export * from './enocean';
+export * from './enocean/index.js';

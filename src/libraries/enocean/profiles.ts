@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import { ByteFieldExtractor } from './bit-operations';
-import { RadioTelegram, RORG } from './types';
+import { ByteFieldExtractor } from './bit-operations.js';
+import { RadioTelegram, RORG } from './types.js';
 
 /**
  * Énumération des profils EEP supportés
