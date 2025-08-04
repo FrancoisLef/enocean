@@ -4,13 +4,7 @@
 /.idea
 /dist
 /tmp
-/test/shared/storage/tmp
 /node_modules
-tsconfig.tsbuildinfo
-oclif.manifest.json
-
-
-
 yarn.lock
 pnpm-lock.yaml
 

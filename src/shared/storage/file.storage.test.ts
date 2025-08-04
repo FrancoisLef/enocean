@@ -51,7 +51,9 @@ describe('Storage', () => {
       try {
         await fs.access(filePath);
         fileExistsAfter = true;
-      } catch {}
+      } catch {
+        //
+      }
 
       expect(fileExistsAfter).to.equal(true);
 
@@ -89,7 +91,9 @@ describe('Storage', () => {
       try {
         await fs.access(filePath);
         fileExists = true;
-      } catch {}
+      } catch {
+        // void
+      }
 
       expect(fileExists).to.equal(true);
     });

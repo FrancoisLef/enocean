@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { ByteFieldExtractor } from './bit-operations.js';
 import { RadioTelegram, RORG } from './types.js';
 

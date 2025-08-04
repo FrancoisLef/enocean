@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 /**
  * Utility class for readable bit operations
  * Replaces bitwise operations with more understandable method names

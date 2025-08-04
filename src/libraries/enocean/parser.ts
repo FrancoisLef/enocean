@@ -143,7 +143,6 @@ export class EnOceanParser {
     const rorg = data[0] as RORG;
     const userData = data.slice(1, -5); // Données utilisateur (sans RORG et les 5 derniers octets)
     const senderId = data.readUInt32BE(data.length - 5);
-    // eslint-disable-next-line unicorn/prefer-at
     const status = data[data.length - 1];
 
     // Données optionnelles (si présentes)

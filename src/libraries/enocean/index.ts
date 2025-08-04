@@ -1,4 +1,3 @@
-// Core EnOcean library exports
 export {
   BitOperations,
   ByteFieldExtractor,

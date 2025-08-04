@@ -14,7 +14,6 @@ import {
 /**
  * Gestionnaire principal pour la communication EnOcean
  */
-// eslint-disable-next-line unicorn/prefer-event-target
 export class EnOceanManager extends EventEmitter {
   /**
    * Configuration par défaut du port série pour TCM 310
@@ -29,6 +28,7 @@ export class EnOceanManager extends EventEmitter {
   private readonly maxReconnectAttempts: number = 5;
   private parser: EnOceanParser;
   private reconnectAttempts: number = 0;
+  // eslint-disable-next-line no-undef
   private reconnectTimer: NodeJS.Timeout | null = null;
   private serialPort: null | SerialPort = null;
 
@@ -97,6 +97,7 @@ export class EnOceanManager extends EventEmitter {
    */
   public async disconnect(): Promise<void> {
     if (this.reconnectTimer) {
+      // eslint-disable-next-line no-undef
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
     }
@@ -168,6 +169,7 @@ export class EnOceanManager extends EventEmitter {
         `Tentative de reconnexion ${this.reconnectAttempts}/${this.maxReconnectAttempts} dans ${delay}ms`,
       );
 
+      // eslint-disable-next-line no-undef
       this.reconnectTimer = setTimeout(() => {
         this.reconnectTimer = null;
         // Note: Pour une vraie reconnexion, il faudrait stocker le portPath et la config
@@ -216,7 +218,6 @@ export class EnOceanManager extends EventEmitter {
     const rorg = data[0] as RORG;
     const userData = data.slice(1, -5);
     const senderId = data.readUInt32BE(data.length - 5);
-    // eslint-disable-next-line unicorn/prefer-at
     const status = data[data.length - 1];
 
     let subTelNum = 0;
