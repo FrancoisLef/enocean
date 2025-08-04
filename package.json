@@ -1,6 +1,7 @@
 {
   "name": "enocean-cli",
   "version": "0.8.0",
+  "private": false,
   "description": "EnOcean CLI tool to manage EnOcean dongle and devices",
   "keywords": [
     "enocean",
@@ -51,6 +52,11 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
   },
   "pkg": {
     "scripts": "dist/**/*.cjs",
