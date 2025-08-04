@@ -37,6 +37,6 @@ export default [
   },
   prettier,
   {
-    ignores: ['dist/', 'node_modules/', 'binaries/', 'tmp/'],
+    ignores: ['dist/', 'node_modules/', 'bin/', 'tmp/'],
   },
 ];

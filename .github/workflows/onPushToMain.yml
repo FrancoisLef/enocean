@@ -55,5 +55,5 @@ jobs:
           commit: ${{ github.ref_name }}
           token: ${{ secrets.GH_TOKEN }}
           skipIfReleaseExists: true
-          artifacts: 'binaries/*'
+          artifacts: 'bin/*'
           artifactContentType: application/octet-stream

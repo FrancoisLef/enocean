@@ -21,8 +21,8 @@
     "./dist"
   ],
   "scripts": {
+    "binary": "pkg .",
     "build": "tsup",
-    "build:binary": "npm run build && pkg dist/bin.cjs --targets node18-linux-x64,node18-win-x64,node18-macos-x64 --out-path binaries",
     "dev": "tsx src/bin.ts",
     "format": "prettier --write .",
     "lint": "eslint src/**/*.ts",
@@ -38,9 +38,9 @@
     "@types/node": "24.0.3",
     "@typescript-eslint/eslint-plugin": "8.18.2",
     "@typescript-eslint/parser": "8.18.2",
+    "@yao-pkg/pkg": "6.6.0",
     "eslint": "9.29.0",
     "eslint-config-prettier": "10.1.5",
-    "pkg": "5.8.1",
     "prettier": "3.5.3",
     "prettier-plugin-packagejson": "2.5.15",
     "shx": "0.4.0",
@@ -58,6 +58,7 @@
       "node_modules/serialport/**/*",
       "node_modules/@serialport/**/*"
     ],
+    "out-path": "bin",
     "targets": [
       "node18-linux-x64",
       "node18-win-x64",
