@@ -3,7 +3,7 @@
 **/.DS_Store
 /.idea
 /dist
-/bin
+/binaries
 /tmp
 /node_modules
 yarn.lock

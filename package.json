@@ -58,7 +58,7 @@
       "node_modules/serialport/**/*",
       "node_modules/@serialport/**/*"
     ],
-    "outputPath": "bin",
+    "outputPath": "binaries",
     "targets": [
       "node18-alpine-arm64",
       "node18-linux-x64",
