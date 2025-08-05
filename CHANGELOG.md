@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/FrancoisLef/enocean/compare/v0.10.5...v0.11.0) (2025-08-05)
+
+
+### Features
+
+* **configure:** use chalk for better UX ([5c14153](https://github.com/FrancoisLef/enocean/commit/5c14153008f594f7c9a89e0282693189dd9c66ba))
+
 ## [0.10.5](https://github.com/FrancoisLef/enocean/compare/v0.10.4...v0.10.5) (2025-08-05)
 
 
