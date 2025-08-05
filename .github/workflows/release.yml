@@ -52,6 +52,10 @@ jobs:
           echo "Version is set to $VERSION"
       - name: Get next version
         run: npm run release:version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: 🏷️ Set version in package.json
         run: |
           VERSION=$(cat .VERSION)
