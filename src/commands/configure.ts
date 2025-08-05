@@ -1,4 +1,5 @@
 import { number, select } from '@inquirer/prompts';
+import chalk from 'chalk';
 import { SerialPort } from 'serialport';
 
 import { getCache, handleError } from '../shared/cli-utils.js';
@@ -13,17 +14,18 @@ export async function configure(): Promise<void> {
       choices: portPaths.map((portPath) => ({
         name:
           portPath === cache.get('dongle:port')
-            ? `${portPath} (default)`
+            ? `${chalk.bold(portPath)} ${chalk.italic.dim('(actuel)')}`
             : portPath,
         short: portPath,
         value: portPath,
       })),
       default: cache.get('dongle:port'),
       instructions: {
-        navigation: '<↑ ↓> arrow keys to navigate and <enter> to confirm.',
+        navigation:
+          '<↑ ↓> flèches directionnelles pour naviguer et <entrer> pour confirmer.',
         pager: 'More options available (use arrow keys ↑ ↓)',
       },
-      message: 'Select a serial port to use:',
+      message: 'Sélectionnez votre périphérique EnOcean:',
       theme: {
         helpMode: 'always',
       },
@@ -32,7 +34,7 @@ export async function configure(): Promise<void> {
     const baud =
       (await number({
         default: cache.get('dongle:baud') || 57_600,
-        message: 'Enter the baud rate:',
+        message: 'Entrez le débit en bauds :',
       })) ?? 57_600;
 
     await cache.set({
@@ -41,7 +43,9 @@ export async function configure(): Promise<void> {
       'dongle:port': port,
     });
 
-    console.log(`✔ Dongle is configured`);
+    console.log(
+      `${chalk.green('✔')} ${chalk.bold('Le périphérique est configuré')}`,
+    );
   } catch (error) {
     handleError(error as Error);
   }
