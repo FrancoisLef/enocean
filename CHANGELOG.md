@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/FrancoisLef/enocean/compare/v0.12.0...v0.12.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* **chalk:** downgrade from v5 to v4 for CJS compatibility ([566aa4d](https://github.com/FrancoisLef/enocean/commit/566aa4df31c71318933a896ef45830f8b571940a))
+
 # [0.12.0](https://github.com/FrancoisLef/enocean/compare/v0.11.0...v0.12.0) (2025-08-05)
 
 
