@@ -1,3 +1,12 @@
+# [0.12.0](https://github.com/FrancoisLef/enocean/compare/v0.11.0...v0.12.0) (2025-08-05)
+
+
+### Features
+
+* **commands:** update command use BaseCommand ([28f5f00](https://github.com/FrancoisLef/enocean/commit/28f5f0084414b7b67d21f3d9ea592465de6485b0))
+* **commands:** update listen command to use BaseCommand ([ab66a2b](https://github.com/FrancoisLef/enocean/commit/ab66a2bbecc819a055eb818f0c39baa21251cf96))
+* **commands:** use base command class ([86326a1](https://github.com/FrancoisLef/enocean/commit/86326a16424996979f5a9996fa0a2d74361c94d4))
+
 # [0.11.0](https://github.com/FrancoisLef/enocean/compare/v0.10.5...v0.11.0) (2025-08-05)
 
 
