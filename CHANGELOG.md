@@ -1,3 +1,10 @@
+## [0.10.2](https://github.com/FrancoisLef/enocean/compare/v0.10.1...v0.10.2) (2025-08-05)
+
+
+### Bug Fixes
+
+* **release:** asset names ([a4dde4a](https://github.com/FrancoisLef/enocean/commit/a4dde4a3c0d1faafcf3499d4ee419babfabea13c))
+
 ## [0.10.1](https://github.com/FrancoisLef/enocean/compare/v0.10.0...v0.10.1) (2025-08-05)
 
 
