@@ -1,3 +1,10 @@
+# [0.10.0](https://github.com/FrancoisLef/enocean/compare/v0.9.1...v0.10.0) (2025-08-05)
+
+
+### Features
+
+* **release:** define assets labels ([3671fcb](https://github.com/FrancoisLef/enocean/commit/3671fcbbac8a1e6ff5993b024cf15d5c146dc333))
+
 ## [0.9.1](https://github.com/FrancoisLef/enocean/compare/v0.9.0...v0.9.1) (2025-08-05)
 
 
