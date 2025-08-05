@@ -20,7 +20,8 @@
       "Bash(./binaries/bin-macos:*)",
       "Bash(chmod:*)",
       "Bash(npm uninstall:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(git config:*)"
     ],
     "deny": []
   }
