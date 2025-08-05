@@ -1,5 +1,5 @@
 import { ByteFieldExtractor } from './bit-operations.js';
-import { RadioTelegram, RORG } from './types.js';
+import { RORG, RadioTelegram } from './types.js';
 
 /**
  * Énumération des profils EEP supportés

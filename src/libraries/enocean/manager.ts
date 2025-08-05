@@ -6,8 +6,8 @@ import { EEPDecoder } from './profiles.js';
 import {
   ESP3Packet,
   PacketType,
-  RadioTelegram,
   RORG,
+  RadioTelegram,
   SerialConfig,
 } from './types.js';
 

@@ -1,6 +1,12 @@
 {
-  "plugins": ["prettier-plugin-packagejson"],
+  "bracketSpacing": true,
+  "importOrder": ["^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": [
+    "prettier-plugin-packagejson",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
   "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true
+  "trailingComma": "all"
 }

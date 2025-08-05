@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { beforeEach, afterEach, describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { FileStorage } from './file.storage.js';
 

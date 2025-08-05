@@ -1,5 +1,6 @@
 import { number, select } from '@inquirer/prompts';
 import { SerialPort } from 'serialport';
+
 import { getCache, handleError } from '../shared/cli-utils.js';
 
 export async function configure(): Promise<void> {

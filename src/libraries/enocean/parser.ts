@@ -3,8 +3,8 @@ import {
   ESP3Header,
   ESP3Packet,
   PacketType,
-  RadioTelegram,
   RORG,
+  RadioTelegram,
 } from './types.js';
 
 /**

@@ -48,7 +48,7 @@ export class CacheStorage {
   ): Promise<CacheStorage> {
     if (typeof keyOrData === 'string') {
       // Single key-value pair
-      this.cache[keyOrData] = value!;
+      this.cache[keyOrData] = value;
     } else {
       // Bulk update with object
       Object.assign(this.cache, keyOrData);

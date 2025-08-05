@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { configure } from './commands/configure.js';
 import { listen } from './commands/listen.js';
 import { update } from './commands/update.js';
