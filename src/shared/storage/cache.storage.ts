@@ -1,10 +1,10 @@
 import { FileStorage } from './file.storage.js';
 
-export type CacheData = {
+export interface CacheData {
   'dongle:baud'?: number;
   'dongle:configured'?: boolean;
   'dongle:port'?: string;
-};
+}
 
 export type CacheKey = keyof CacheData;
 
