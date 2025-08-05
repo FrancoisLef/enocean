@@ -1,3 +1,10 @@
+## [0.10.3](https://github.com/FrancoisLef/enocean/compare/v0.10.2...v0.10.3) (2025-08-05)
+
+
+### Bug Fixes
+
+* **ci:** setup ci workflow & correct assets names ([522e045](https://github.com/FrancoisLef/enocean/commit/522e045838381632383f681b99474b9d1b456152))
+
 ## [0.10.2](https://github.com/FrancoisLef/enocean/compare/v0.10.1...v0.10.2) (2025-08-05)
 
 
