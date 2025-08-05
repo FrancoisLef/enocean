@@ -1,3 +1,13 @@
+## [0.12.2](https://github.com/FrancoisLef/enocean/compare/v0.12.1...v0.12.2) (2025-08-05)
+
+
+### Bug Fixes
+
+* **version:** add semantic release dry run to get next version ([5d21527](https://github.com/FrancoisLef/enocean/commit/5d215270754439d8ccc265e2b86b4cbe12e32084))
+* **version:** set correct next version in package json before build ([530fa07](https://github.com/FrancoisLef/enocean/commit/530fa07b380e90cc3aa6282c34e417a862d28e97))
+* **version:** test version creation in CI ([cb0381c](https://github.com/FrancoisLef/enocean/commit/cb0381c06ec3aa7096ee357af00951a364cbb4a7))
+* **version:** test version creation in CI ([e243627](https://github.com/FrancoisLef/enocean/commit/e2436272124d340bbe68d80f512d4a0d6b8a8cbf))
+
 ## [0.12.1](https://github.com/FrancoisLef/enocean/compare/v0.12.0...v0.12.1) (2025-08-05)
 
 
