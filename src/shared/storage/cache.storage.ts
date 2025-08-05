@@ -1,3 +1,6 @@
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+
 import { FileStorage } from './file.storage.js';
 
 export interface CacheData {
@@ -9,30 +12,30 @@ export interface CacheData {
 export type CacheKey = keyof CacheData;
 
 export class CacheStorage {
-  private cache: CacheData;
-  private cacheFile: string;
+  private data: CacheData;
+  protected file: string;
   private storage: FileStorage;
 
-  constructor({ cacheDir }: { cacheDir: string }) {
-    this.cache = {};
-    this.cacheFile = `${cacheDir}/cache.json`;
+  constructor(filePath?: string) {
+    this.data = {};
+    this.file = filePath ?? join(homedir(), '.cache', 'enocean', 'cache.json');
     this.storage = new FileStorage();
   }
 
   public get<T extends CacheKey>(key: T): CacheData[T] {
-    return this.cache[key];
+    return this.data[key];
   }
 
   public getAll(): CacheData {
-    return { ...this.cache };
+    return { ...this.data };
   }
 
   public async init(): Promise<CacheStorage> {
     // Ensure the cache file exists
-    await this.storage.accessFile(this.cacheFile);
+    await this.storage.accessFile(this.file);
 
     // Read the cache file
-    this.cache = await this.storage.readJSON<CacheData>(this.cacheFile);
+    this.data = await this.storage.readJSON<CacheData>(this.file);
 
     return this;
   }
@@ -48,14 +51,14 @@ export class CacheStorage {
   ): Promise<CacheStorage> {
     if (typeof keyOrData === 'string') {
       // Single key-value pair
-      this.cache[keyOrData] = value;
+      this.data[keyOrData] = value;
     } else {
       // Bulk update with object
-      Object.assign(this.cache, keyOrData);
+      Object.assign(this.data, keyOrData);
     }
 
-    // Write the updated cache back to the file
-    await this.storage.writeJSON<CacheData>(this.cache, this.cacheFile);
+    // Write the updated data back to the file
+    await this.storage.writeJSON<CacheData>(this.data, this.file);
 
     return this;
   }

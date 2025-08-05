@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { configure } from './commands/configure.js';
+import { ConfigureCommand } from './commands/configure.js';
 import { listen } from './commands/listen.js';
 import { update } from './commands/update.js';
 
@@ -19,7 +19,10 @@ program
   .description(packageJson.description)
   .version(packageJson.version);
 
-program.command('configure').description('Configure dongle').action(configure);
+program
+  .command('configure')
+  .description('Configure dongle')
+  .action(() => new ConfigureCommand().run());
 
 program.command('listen').description('Listen for telegrams').action(listen);
 

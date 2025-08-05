@@ -21,7 +21,8 @@
       "Bash(chmod:*)",
       "Bash(npm uninstall:*)",
       "Bash(npm view:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }

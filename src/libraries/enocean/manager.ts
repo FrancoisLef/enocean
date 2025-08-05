@@ -24,11 +24,11 @@ export class EnOceanManager extends EventEmitter {
     parity: 'none',
     stopBits: 1,
   };
-  private isConnected: boolean = false;
+  private isConnected = false;
   private readonly maxReconnectAttempts: number = 5;
   private parser: EnOceanParser;
-  private reconnectAttempts: number = 0;
-  // eslint-disable-next-line no-undef
+  private reconnectAttempts = 0;
+
   private reconnectTimer: NodeJS.Timeout | null = null;
   private serialPort: null | SerialPort = null;
 
@@ -38,7 +38,7 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Se connecte au stick USB EnOcean
+   * Se connecte au périphérique EnOcean
    * @param portPath - Chemin du port série (ex: '/dev/ttyUSB0' ou 'COM3')
    * @param config - Configuration optionnelle du port série
    */
@@ -68,7 +68,12 @@ export class EnOceanManager extends EventEmitter {
 
       // Ouverture du port
       await new Promise<void>((resolve, reject) => {
-        this.serialPort!.open((error) => {
+        if (!this.serialPort) {
+          reject(new Error('Port série non initialisé'));
+          return;
+        }
+
+        this.serialPort.open((error) => {
           if (error) {
             reject(
               new Error(
@@ -97,14 +102,13 @@ export class EnOceanManager extends EventEmitter {
    */
   public async disconnect(): Promise<void> {
     if (this.reconnectTimer) {
-      // eslint-disable-next-line no-undef
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
     }
 
     if (this.serialPort && this.serialPort.isOpen) {
       await new Promise<void>((resolve) => {
-        this.serialPort!.close(() => {
+        this.serialPort.close(() => {
           resolve();
         });
       });
@@ -169,7 +173,6 @@ export class EnOceanManager extends EventEmitter {
         `Tentative de reconnexion ${this.reconnectAttempts}/${this.maxReconnectAttempts} dans ${delay}ms`,
       );
 
-      // eslint-disable-next-line no-undef
       this.reconnectTimer = setTimeout(() => {
         this.reconnectTimer = null;
         // Note: Pour une vraie reconnexion, il faudrait stocker le portPath et la config

@@ -2,30 +2,28 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 import { SerialPort } from 'serialport';
 
-import { getCache, handleError } from '../shared/cli-utils.js';
+import { Command } from '../command.js';
 
-export async function configure(): Promise<void> {
-  try {
-    const cache = await getCache();
+export class ConfigureCommand extends Command {
+  protected async execute(): Promise<void> {
     const ports = await SerialPort.list();
-    const portPaths = ports.map((port) => port.path);
+    const paths = ports.map((port) => port.path);
 
     const port = await select<string>({
-      choices: portPaths.map((portPath) => ({
+      choices: paths.map((path) => ({
         name:
-          portPath === cache.get('dongle:port')
-            ? `${chalk.bold(portPath)} ${chalk.italic.dim('(actuel)')}`
-            : portPath,
-        short: portPath,
-        value: portPath,
+          path === this.cache.get('dongle:port')
+            ? `${chalk.bold(path)} ${chalk.italic.dim('(current)')}`
+            : path,
+        short: path,
+        value: path,
       })),
-      default: cache.get('dongle:port'),
+      default: this.cache.get('dongle:port'),
       instructions: {
-        navigation:
-          '<↑ ↓> flèches directionnelles pour naviguer et <entrer> pour confirmer.',
+        navigation: '<↑ ↓> arrow keys to navigate and <enter> to confirm.',
         pager: 'More options available (use arrow keys ↑ ↓)',
       },
-      message: 'Sélectionnez votre périphérique EnOcean:',
+      message: 'Select your EnOcean device:',
       theme: {
         helpMode: 'always',
       },
@@ -33,20 +31,18 @@ export async function configure(): Promise<void> {
 
     const baud =
       (await number({
-        default: cache.get('dongle:baud') || 57_600,
-        message: 'Entrez le débit en bauds :',
+        default: this.cache.get('dongle:baud') || 57_600,
+        message: 'Enter the baud rate:',
       })) ?? 57_600;
 
-    await cache.set({
+    await this.cache.set({
       'dongle:baud': baud,
       'dongle:configured': true,
       'dongle:port': port,
     });
 
     console.log(
-      `${chalk.green('✔')} ${chalk.bold('Le périphérique est configuré')}`,
+      `${chalk.green('✔')} ${chalk.bold('Device configured successfully')}`,
     );
-  } catch (error) {
-    handleError(error as Error);
   }
 }
