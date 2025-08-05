@@ -47,13 +47,10 @@ jobs:
       - name: 📤 Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist/
-      - name: 📤 Upload binary artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: binaries
-          path: binaries/
+          name: build-artifacts
+          path: |
+            dist/
+            binaries/
 
   release:
     name: 🏷️ Release
@@ -81,13 +78,8 @@ jobs:
       - name: 📥 Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist
-          path: dist/
-      - name: 📥 Download binary artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: binaries
-          path: binaries/
+          name: build-artifacts
+          path: .
       - name: 🏷️ Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
