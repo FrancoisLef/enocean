@@ -1,21 +1,20 @@
-import { EnOceanManager } from '../libraries/enocean/manager.js';
-import { getCache, handleError } from '../shared/cli-utils.js';
+import chalk from 'chalk';
 
-export async function listen(): Promise<void> {
-  try {
-    const cache = await getCache();
+import { BaseCommand } from '../command.js';
+import { EnOceanManager } from '../libraries/enocean/manager.js';
+
+export class ListenCommand extends BaseCommand {
+  protected async execute(): Promise<void> {
     const {
       'dongle:baud': baud,
       'dongle:configured': isConfigured,
       'dongle:port': port,
-    } = cache.getAll();
+    } = this.cache.getAll();
 
     if (!isConfigured || !port || !baud) {
-      console.error('Error: The dongle is not configured');
-      console.error(
-        'Suggestion: Run `enocean configure` to set up the dongle.',
+      throw new Error(
+        'The dongle is not configured. Run `enocean configure` to set up the dongle.',
       );
-      process.exit(1);
     }
 
     const manager = new EnOceanManager();
@@ -23,25 +22,20 @@ export async function listen(): Promise<void> {
     manager.on('eepData', (data) => {
       if (data.profile === 'F6-02-01') {
         console.log(
-          `Interrupteur ${data.senderId.toString(16)}: Rocker A=${data.rockerA}, Action=${data.rockerAction}`,
+          `${chalk.blue('Switch')} ${chalk.dim(data.senderId.toString(16))}: Rocker A=${data.rockerA}, Action=${data.rockerAction}`,
         );
       } else if (data.profile === 'D2-01-12') {
         console.log(
-          `Relay Nodon ${data.senderId.toString(16)}: Canal=${data.channel}, État=${data.outputState}, Valeur=${data.outputValue}%`,
+          `${chalk.green('Relay')} ${chalk.dim(data.senderId.toString(16))}: Channel=${data.channel}, State=${data.outputState}, Value=${data.outputValue}%`,
         );
       }
     });
 
-    // manager.on('radioTelegram', (telegram) => {
-    //   // Décodage manuel si nécessaire
-    //   const decoded = EEPDecoder.decode(telegram);
-    //   if (decoded) {
-    //     console.log('Données décodées:', decoded);
-    //   }
-    // });
+    console.log(
+      `${chalk.blue('🎧')} ${chalk.bold('Listening for EnOcean telegrams on')} ${chalk.yellow(port)} ${chalk.dim(`(${baud} baud)`)}`,
+    );
+    console.log(chalk.italic.dim('Press Ctrl+C to stop'));
 
     manager.connect(port, { baudRate: baud });
-  } catch (error) {
-    handleError(error as Error);
   }
 }
