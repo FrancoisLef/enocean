@@ -30,25 +30,27 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@inquirer/prompts": "7.5.3",
-    "commander": "12.1.0",
+    "@inquirer/prompts": "7.8.0",
+    "commander": "14.0.0",
     "serialport": "13.0.0"
   },
   "devDependencies": {
+    "@esbuild/darwin-arm64": "0.25.8",
     "@eslint/js": "9.32.0",
-    "@types/node": "24.0.3",
-    "@typescript-eslint/eslint-plugin": "8.18.2",
-    "@typescript-eslint/parser": "8.18.2",
+    "@types/node": "24.2.0",
+    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/parser": "8.39.0",
+    "@vitest/eslint-plugin": "1.3.4",
     "@yao-pkg/pkg": "6.6.0",
-    "eslint": "9.29.0",
-    "eslint-config-prettier": "10.1.5",
-    "prettier": "3.5.3",
-    "prettier-plugin-packagejson": "2.5.15",
+    "eslint": "9.32.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.6.2",
+    "prettier-plugin-packagejson": "2.5.19",
     "shx": "0.4.0",
-    "tsup": "8.3.5",
-    "tsx": "4.19.2",
-    "typescript": "5.7.2",
-    "vitest": "2.1.8"
+    "tsup": "8.5.0",
+    "tsx": "4.20.3",
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,7 +1,8 @@
 import js from '@eslint/js';
+import prettier from 'eslint-config-prettier';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
-import prettier from 'eslint-config-prettier';
+import vitest from '@vitest/eslint-plugin';
 
 export default [
   js.configs.recommended,
@@ -36,6 +37,16 @@ export default [
     },
   },
   prettier,
+  {
+    files: ['**/*.test.ts'],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.all.rules,
+      'vitest/no-hooks': 'off',
+    },
+  },
   {
     ignores: ['dist/', 'node_modules/', 'bin/', 'tmp/'],
   },

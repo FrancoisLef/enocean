@@ -7,7 +7,9 @@ import { listen } from './commands/listen.js';
 import { update } from './commands/update.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
+const packageJson = JSON.parse(
+  readFileSync(join(__dirname, '../package.json'), 'utf8'),
+);
 
 const program = new Command();
 
