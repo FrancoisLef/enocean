@@ -30,6 +30,7 @@
     "format": "prettier --write .",
     "lint": "eslint src/**/*.ts",
     "release": "semantic-release",
+    "release:version": "semantic-release --dry-run",
     "test": "vitest"
   },
   "dependencies": {
