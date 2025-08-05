@@ -1,4 +1,4 @@
-name: 🚀 GitHub release
+name: 📦 Release
 
 on:
   push:
