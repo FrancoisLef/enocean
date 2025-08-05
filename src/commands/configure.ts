@@ -2,9 +2,9 @@ import { number, select } from '@inquirer/prompts';
 import chalk from 'chalk';
 import { SerialPort } from 'serialport';
 
-import { Command } from '../command.js';
+import { BaseCommand } from '../command.js';
 
-export class ConfigureCommand extends Command {
+export class ConfigureCommand extends BaseCommand {
   protected async execute(): Promise<void> {
     const ports = await SerialPort.list();
     const paths = ports.map((port) => port.path);

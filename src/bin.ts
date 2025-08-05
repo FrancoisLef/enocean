@@ -1,16 +1,9 @@
 import { Command } from 'commander';
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
+import packageJson from '../package.json';
 import { ConfigureCommand } from './commands/configure.js';
 import { listen } from './commands/listen.js';
-import { update } from './commands/update.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const packageJson = JSON.parse(
-  readFileSync(join(__dirname, '../package.json'), 'utf8'),
-);
+import { UpdateCommand } from './commands/update.js';
 
 const program = new Command();
 
@@ -26,6 +19,9 @@ program
 
 program.command('listen').description('Listen for telegrams').action(listen);
 
-program.command('update').description('Check for CLI updates').action(update);
+program
+  .command('update')
+  .description('Check for CLI updates')
+  .action(() => new UpdateCommand().run());
 
 program.parse();

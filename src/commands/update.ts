@@ -1,9 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { get } from 'node:https';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { BaseCommand } from '../command.js';
 
 interface NpmRegistryResponse {
   version: string;
@@ -11,83 +8,44 @@ interface NpmRegistryResponse {
   description?: string;
 }
 
-export async function update(): Promise<void> {
-  try {
-    // Find package.json - it could be in different locations depending on build/dev context
-    let packageJsonPath = join(__dirname, '../../package.json');
-    try {
-      readFileSync(packageJsonPath, 'utf8');
-    } catch {
-      // Try relative to current working directory (for built version)
-      packageJsonPath = join(
-        process.cwd(),
-        'node_modules/enocean-cli/package.json',
+export class UpdateCommand extends BaseCommand {
+  protected async execute(): Promise<void> {
+    const { version, name, homepage } = this.cli;
+
+    console.log(`🔍 Checking for updates for ${chalk.bold(name)}…`);
+
+    const response = await fetch(`https://registry.npmjs.org/${name}/latest`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const { version: latest }: NpmRegistryResponse =
+      (await response.json()) || { version: '' };
+
+    if (version === latest) {
+      console.log(`📦 ${chalk.dim('Current:')} ${chalk.bold.blue(version)}`);
+      console.log(`📦  ${chalk.dim('Latest:')} ${chalk.dim(latest)}`);
+      console.log(
+        `${chalk.green('✔')} ${chalk.bold('You are already using the latest version!')}`,
       );
-      try {
-        readFileSync(packageJsonPath, 'utf8');
-      } catch {
-        // Try in the installed global location
-        packageJsonPath = join(__dirname, '../package.json');
-      }
-    }
-
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-    const currentVersion = packageJson.version;
-    const packageName = packageJson.name;
-
-    console.log(`🔍 Vérification des mises à jour pour ${packageName}...`);
-    console.log(`📦 Version actuelle: ${currentVersion}`);
-
-    // Fetch latest version from npm registry using https module
-    const latestPackage = await new Promise<NpmRegistryResponse>(
-      (resolve, reject) => {
-        const url = `https://registry.npmjs.org/${packageName}/latest`;
-
-        get(url, (res) => {
-          let data = '';
-
-          if (res.statusCode !== 200) {
-            reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
-            return;
-          }
-
-          res.on('data', (chunk) => {
-            data += chunk;
-          });
-
-          res.on('end', () => {
-            try {
-              const json = JSON.parse(data);
-              resolve(json);
-            } catch (error) {
-              reject(error);
-            }
-          });
-        }).on('error', (error) => {
-          reject(error);
-        });
-      },
-    );
-
-    const latestVersion = latestPackage.version;
-
-    console.log(`📦 Dernière version: ${latestVersion}`);
-
-    if (currentVersion === latestVersion) {
-      console.log('✅ Vous utilisez déjà la dernière version!');
     } else {
-      console.log('🆕 Une nouvelle version est disponible!');
+      console.log(`📦 ${chalk.dim('Current:')} ${chalk.blue(version)}`);
+      console.log(`📦  ${chalk.dim('Latest:')} ${chalk.bold.green(latest)}`);
+      console.log(
+        `${chalk.cyan('🆕')} ${chalk.bold('A new version is available!')}`,
+      );
       console.log('');
-      console.log('Pour mettre à jour, exécutez:');
-      console.log(`   npm install -g ${packageName}@latest`);
+      console.log(chalk.dim('To update:'));
       console.log('');
-      console.log('Ou avec yarn:');
-      console.log(`   yarn global add ${packageName}@latest`);
+      console.log('💾 Binary download:');
+      console.log(`   ${chalk.blue(`${homepage}/releases`)}`);
+      console.log('');
+      console.log('📦 Via npm:');
+      console.log(`   ${chalk.green(`npm install -g ${name}@latest`)}`);
+      console.log('');
+      console.log('🧶 Via yarn:');
+      console.log(`   ${chalk.green(`yarn global add ${name}@latest`)}`);
     }
-  } catch (error) {
-    console.error(
-      '❌ Erreur lors de la vérification des mises à jour:',
-      error instanceof Error ? error.message : error,
-    );
   }
 }
