@@ -25,8 +25,7 @@
     "./dist"
   ],
   "scripts": {
-    "binary": "pkg .",
-    "build": "tsup",
+    "build": "tsup && pkg .",
     "dev": "tsx src/bin.ts",
     "format": "prettier --write .",
     "lint": "eslint src/**/*.ts",

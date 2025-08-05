@@ -39,7 +39,7 @@ export default {
             name: 'enocean',
           },
           {
-            path: 'binaries/enocean-cli-win-x64',
+            path: 'binaries/enocean-cli-win-x64.exe',
             label: 'Windows x64',
             name: 'enocean',
           },
