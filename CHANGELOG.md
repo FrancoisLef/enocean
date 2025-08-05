@@ -1,3 +1,10 @@
+## [0.10.5](https://github.com/FrancoisLef/enocean/compare/v0.10.4...v0.10.5) (2025-08-05)
+
+
+### Bug Fixes
+
+* **ci:** workflow names ([4785c8c](https://github.com/FrancoisLef/enocean/commit/4785c8c0377b587738deea5adec7e8b8c5b0e7a3))
+
 ## [0.10.4](https://github.com/FrancoisLef/enocean/compare/v0.10.3...v0.10.4) (2025-08-05)
 
 
