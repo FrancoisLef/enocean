@@ -9,14 +9,17 @@
   ],
   "homepage": "https://github.com/FrancoisLef/enocean",
   "bugs": "https://github.com/FrancoisLef/enocean/issues",
-  "repository": "FrancoisLef/enocean",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrancoisLef/enocean.git"
+  },
   "license": "MIT",
   "author": "François Lefebvre",
   "type": "module",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "enocean": "./dist/bin.cjs"
+    "enocean": "dist/bin.cjs"
   },
   "files": [
     "./dist"
