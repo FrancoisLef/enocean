@@ -107,39 +107,6 @@ export class BitOperations {
   }
 }
 
-/**
- * CRC8 calculator with readable implementation
- * Replaces bitwise CRC calculation with step-by-step logic
- */
-export class CRC8Calculator {
-  private static readonly POLYNOMIAL = 0x07; // EnOcean CRC8 polynomial
-
-  /**
-   * Calculates CRC8 for the given data buffer
-   * @param data - Data buffer to calculate CRC for
-   * @returns CRC8 value
-   */
-  public static calculate(data: Buffer): number {
-    let crc = 0;
-
-    for (const byte of data) {
-      crc = BitOperations.xor(crc, byte);
-
-      for (let bitIndex = 0; bitIndex < 8; bitIndex++) {
-        if (BitOperations.isMostSignificantBitSet(crc)) {
-          crc = BitOperations.shiftLeft(crc, 1);
-          crc = BitOperations.xor(crc, this.POLYNOMIAL);
-        } else {
-          crc = BitOperations.shiftLeft(crc, 1);
-        }
-
-        crc = BitOperations.toByte(crc);
-      }
-    }
-
-    return crc;
-  }
-}
 
 /**
  * Byte field extractor for EnOcean telegram parsing

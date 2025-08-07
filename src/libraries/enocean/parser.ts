@@ -1,14 +1,15 @@
-import { CRC8Calculator } from './bit-operations.js';
+import { CRC8Calculator } from './checksum/crc8.js';
+import { OptionalDataParser } from './packet/optional-data.js';
 import {
   ESP3Header,
   ESP3Packet,
   PacketType,
   RORG,
   RadioTelegram,
-} from './types.js';
+} from './packet/types.js';
 
 /**
- * Classe pour parser les paquets EnOcean ESP3
+ * Class for parsing EnOcean ESP3 packets
  */
 export class EnOceanParser {
   private buffer: Buffer = Buffer.alloc(0);
@@ -16,30 +17,30 @@ export class EnOceanParser {
   private readonly SYNC_BYTE = 0x55;
 
   /**
-   * Ajoute des données au buffer interne
-   * @param data - Nouvelles données à ajouter
+   * Adds data to the internal buffer
+   * @param data - New data to add
    */
   public addData(data: Buffer): void {
     this.buffer = Buffer.concat([this.buffer, data]);
   }
 
   /**
-   * Remet à zéro le buffer interne
+   * Resets the internal buffer
    */
   public clearBuffer(): void {
     this.buffer = Buffer.alloc(0);
   }
 
   /**
-   * Retourne la taille actuelle du buffer
+   * Returns the current buffer size
    */
   public getBufferSize(): number {
     return this.buffer.length;
   }
 
   /**
-   * Tente de parser les paquets disponibles dans le buffer
-   * @returns Array des paquets parsés
+   * Attempts to parse available packets in the buffer
+   * @returns Array of parsed packets
    */
   public parsePackets(): ESP3Packet[] {
     const packets: ESP3Packet[] = [];
@@ -49,40 +50,40 @@ export class EnOceanParser {
       const syncIndex = this.buffer.indexOf(this.SYNC_BYTE);
 
       if (syncIndex === -1) {
-        // Aucun byte de sync trouvé, vider le buffer
+        // No sync byte found, clear the buffer
         this.buffer = Buffer.alloc(0);
         break;
       }
 
-      // Supprimer les données avant le byte de sync
+      // Remove data before the sync byte
       if (syncIndex > 0) {
         this.buffer = this.buffer.slice(syncIndex);
       }
 
-      // Vérifier si on a assez de données pour l'en-tête
+      // Check if we have enough data for the header
       if (this.buffer.length < this.HEADER_LENGTH) {
         break;
       }
 
-      // Parser l'en-tête
+      // Parse the header
       const header = this.parseHeader(this.buffer.slice(0, this.HEADER_LENGTH));
 
       if (!header) {
-        // En-tête invalide, supprimer le premier octet et continuer
+        // Invalid header, remove first byte and continue
         this.buffer = this.buffer.slice(1);
         continue;
       }
 
-      // Calculer la taille totale du paquet
+      // Calculate total packet size
       const totalPacketSize =
-        this.HEADER_LENGTH + header.dataLength + header.optionalLength + 1; // +1 pour le checksum
+        this.HEADER_LENGTH + header.dataLength + header.optionalLength + 1; // +1 for checksum
 
-      // Vérifier si on a tout le paquet
+      // Check if we have the complete packet
       if (this.buffer.length < totalPacketSize) {
-        break; // Attendre plus de données
+        break; // Wait for more data
       }
 
-      // Extraire les données du paquet
+      // Extract packet data
       const dataStart = this.HEADER_LENGTH;
       const data = this.buffer.slice(dataStart, dataStart + header.dataLength);
       const optionalData = this.buffer.slice(
@@ -91,7 +92,7 @@ export class EnOceanParser {
       );
       const checksum = this.buffer[totalPacketSize - 1];
 
-      // Vérifier le checksum du paquet complet
+      // Verify the complete packet checksum
       const packetData = this.buffer.slice(
         this.HEADER_LENGTH,
         totalPacketSize - 1,
@@ -101,14 +102,14 @@ export class EnOceanParser {
 
       if (calculatedChecksum !== checksum) {
         console.warn(
-          `Checksum invalide pour le paquet: calculé=${calculatedChecksum}, reçu=${checksum}`,
+          `Invalid packet checksum: calculated=${calculatedChecksum}, received=${checksum}`,
         );
         this.buffer = this.buffer.slice(1);
 
         continue;
       }
 
-      // Créer le paquet
+      // Create the packet
       const packet: ESP3Packet = {
         checksum,
         data,
@@ -118,7 +119,7 @@ export class EnOceanParser {
 
       packets.push(packet);
 
-      // Supprimer le paquet traité du buffer
+      // Remove processed packet from buffer
       this.buffer = this.buffer.slice(totalPacketSize);
     }
 
@@ -126,37 +127,27 @@ export class EnOceanParser {
   }
 
   /**
-   * Parse un télégrame radio
-   * @param data - Données du télégrame
-   * @param optionalData - Données optionnelles
-   * @returns Télégrame radio parsé
+   * Parse a radio telegram
+   * @param data - Telegram data
+   * @param optionalData - Optional data
+   * @returns Parsed radio telegram
    */
   public parseRadioTelegram(
     data: Buffer,
     optionalData: Buffer,
   ): null | RadioTelegram {
     if (data.length < 6) {
-      console.warn('Télégrame radio trop court');
+      console.warn('Radio telegram too short');
       return null;
     }
 
     const rorg = data[0] as RORG;
-    const userData = data.slice(1, -5); // Données utilisateur (sans RORG et les 5 derniers octets)
+    const userData = data.slice(1, -5); // User data (without RORG and last 5 bytes)
     const senderId = data.readUInt32BE(data.length - 5);
     const status = data[data.length - 1];
 
-    // Données optionnelles (si présentes)
-    let subTelNum = 0;
-    let destinationId = 0;
-    let dbm = -100; // Valeur par défaut
-    let securityLevel = 0;
-
-    if (optionalData.length >= 7) {
-      subTelNum = optionalData[0];
-      destinationId = optionalData.readUInt32BE(1);
-      dbm = -Math.abs(optionalData[5]); // Conversion en dBm négatif
-      securityLevel = optionalData[6];
-    }
+    // Optional data (if present)
+    const { subTelNum, destinationId, dbm, securityLevel } = OptionalDataParser.parse(optionalData);
 
     return {
       data: userData,
@@ -171,9 +162,9 @@ export class EnOceanParser {
   }
 
   /**
-   * Parse l'en-tête d'un paquet ESP3
-   * @param headerBuffer - Buffer contenant l'en-tête
-   * @returns En-tête parsé ou null si invalide
+   * Parse ESP3 packet header
+   * @param headerBuffer - Buffer containing the header
+   * @returns Parsed header or null if invalid
    */
   private parseHeader(headerBuffer: Buffer): ESP3Header | null {
     if (headerBuffer.length < this.HEADER_LENGTH) {
@@ -190,13 +181,13 @@ export class EnOceanParser {
     const packetType = headerBuffer[4] as PacketType;
     const crc8Header = headerBuffer[5];
 
-    // Vérification du CRC de l'en-tête
+    // Header CRC verification
     const headerForCRC = headerBuffer.slice(1, 5);
     const calculatedCRC = CRC8Calculator.calculate(headerForCRC);
 
     if (calculatedCRC !== crc8Header) {
       console.warn(
-        `CRC invalide dans l'en-tête: calculé=${calculatedCRC}, reçu=${crc8Header}`,
+        `Invalid header CRC: calculated=${calculatedCRC}, received=${crc8Header}`,
       );
       return null;
     }

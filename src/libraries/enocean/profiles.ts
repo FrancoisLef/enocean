@@ -1,8 +1,8 @@
 import { ByteFieldExtractor } from './bit-operations.js';
-import { RORG, RadioTelegram } from './types.js';
+import { RORG, RadioTelegram } from './packet/types.js';
 
 /**
- * Énumération des profils EEP supportés
+ * Enumeration of supported EEP profiles
  */
 export enum EEPProfile {
   D2_01_12 = 'D2-01-12', // Nodon relay switch
@@ -10,18 +10,18 @@ export enum EEPProfile {
 }
 
 /**
- * Types de données décodées pour chaque profil
+ * Decoded data types for each profile
  */
 
 // Profil F6-02-01 - Interrupteur rocker switch
 export interface F6_02_01_Data {
-  energyBow: boolean; // Bow d'énergie pressé
+  energyBow: boolean; // Energy bow pressed
   profile: EEPProfile.F6_02_01;
   rockerA: 'down' | 'none' | 'up';
   rockerAction: 'pressed' | 'released';
   rockerB: 'down' | 'none' | 'up';
   rssi: number;
-  secondAction: boolean; // Deuxième action détectée
+  secondAction: boolean; // Second action detected
   senderId: number;
 }
 
@@ -31,7 +31,7 @@ export interface D2_01_12_Data {
   command: 'dimming' | 'status_request' | 'status_response' | 'switching';
   dimTime?: number; // Temps de gradation en secondes (optionnel)
   dimValue?: number; // Valeur de gradation (optionnel)
-  outputState: boolean; // État de la sortie
+  outputState: boolean; // Output state
   outputValue: number; // Valeur de sortie (0-100%)
   profile: EEPProfile.D2_01_12;
   rssi: number;
@@ -41,14 +41,14 @@ export interface D2_01_12_Data {
 export type DecodedEEPData = D2_01_12_Data | F6_02_01_Data;
 
 /**
- * Décodeur principal pour les profils EEP
+ * Main decoder for EEP profiles
  */
 export class EEPDecoder {
   /**
-   * Décode un télégrame selon son profil EEP
-   * @param telegram - Télégrame radio à décoder
-   * @param profile - Profil EEP à utiliser (optionnel, détecté automatiquement sinon)
-   * @returns Données décodées ou null si impossible
+   * Decode a telegram according to its EEP profile
+   * @param telegram - Radio telegram to decode
+   * @param profile - EEP profile to use (optional, automatically detected otherwise)
+   * @returns Decoded data or null if impossible
    */
   public static decode(
     telegram: RadioTelegram,
@@ -76,9 +76,9 @@ export class EEPDecoder {
   }
 
   /**
-   * Détermine le profil EEP basé sur le RORG et potentiellement d'autres données
-   * @param telegram - Télégrame radio à analyser
-   * @returns Profil EEP détecté ou null
+   * Determine EEP profile based on RORG and potentially other data
+   * @param telegram - Radio telegram to analyze
+   * @returns Detected EEP profile or null
    */
   public static detectProfile(telegram: RadioTelegram): EEPProfile | null {
     switch (telegram.rorg) {
@@ -90,7 +90,7 @@ export class EEPDecoder {
 
       case RORG.VLD: {
         // D2
-        // Pour D2-01-12, on vérifie la longueur des données et certains patterns
+        // For D2-01-12, we check data length and certain patterns
         if (telegram.data.length > 0) {
           const command = ByteFieldExtractor.extractD2Command(telegram.data[0]);
           // Commands typiques du D2-01-12: switching, dimming, status_request, status_response
@@ -128,9 +128,9 @@ export class EEPDecoder {
   }
 
   /**
-   * Décode un télégrame D2-01-12 (Nodon Relay Switch)
-   * @param telegram - Télégrame radio
-   * @returns Données décodées D2-01-12
+   * Decode a D2-01-12 telegram (Nodon Relay Switch)
+   * @param telegram - Radio telegram
+   * @returns Decoded D2-01-12 data
    */
   private static decodeD2_01_12(telegram: RadioTelegram): D2_01_12_Data | null {
     if (telegram.data.length === 0) {
@@ -147,7 +147,7 @@ export class EEPDecoder {
       return null;
     }
 
-    // Canal (bits 3-0 du premier byte + éventuellement partie du second)
+    // Channel (bits 3-0 of first byte + possibly part of second)
     let channel = ByteFieldExtractor.extractChannel(cmdByte);
 
     let outputValue = 0;
@@ -163,12 +163,12 @@ export class EEPDecoder {
           outputValue = dimValue;
           outputState = dimValue > 0;
 
-          // Temps de gradation si présent
+          // Dimming time if present
           if (telegram.data.length >= 4) {
             const dimTimeRaw = telegram.data[3];
-            // Conversion du temps selon la spécification D2-01-12
+            // Time conversion according to D2-01-12 specification
             if (dimTimeRaw === 0) {
-              dimTime = 0; // Instantané
+              dimTime = 0; // Instant
             } else if (dimTimeRaw <= 127) {
               dimTime = dimTimeRaw; // Secondes
             } else {
@@ -200,7 +200,7 @@ export class EEPDecoder {
 
       case 'switching': {
         if (telegram.data.length >= 2) {
-          // Canal étendu si nécessaire
+          // Extended channel if necessary
           if (telegram.data.length >= 3) {
             channel = ByteFieldExtractor.extractChannel(telegram.data[1], 0x1f); // 5 bits pour le canal (0-29)
             outputState = ByteFieldExtractor.extractBooleanState(
@@ -242,9 +242,9 @@ export class EEPDecoder {
   }
 
   /**
-   * Décode un télégrame F6-02-01 (Rocker Switch)
-   * @param telegram - Télégrame radio
-   * @returns Données décodées F6-02-01
+   * Decode a F6-02-01 telegram (Rocker Switch)
+   * @param telegram - Radio telegram
+   * @returns Decoded F6-02-01 data
    */
   private static decodeF6_02_01(telegram: RadioTelegram): F6_02_01_Data | null {
     if (telegram.data.length === 0) {
@@ -256,16 +256,16 @@ export class EEPDecoder {
     // Bits 7-6: Rocker A
     const rockerA = ByteFieldExtractor.extractRockerPosition(dataByte, 5);
 
-    // Bits 5-4: Energy bow (non utilisé dans F6-02-01 standard)
+    // Bits 5-4: Energy bow (not used in standard F6-02-01)
     const energyBow = ByteFieldExtractor.extractBooleanState(dataByte, 4);
 
     // Bits 3-2: Rocker B
     const rockerB = ByteFieldExtractor.extractRockerPosition(dataByte, 1);
 
-    // Bit 1: Second action (non utilisé dans ce profil)
+    // Bit 1: Second action (not used in this profile)
     const secondAction = ByteFieldExtractor.extractBooleanState(dataByte, 0);
 
-    // Déterminer l'action basée sur le bit T21 du status
+    // Determine action based on T21 bit of status
     const rockerAction = ByteFieldExtractor.extractRockerAction(
       telegram.status,
     );

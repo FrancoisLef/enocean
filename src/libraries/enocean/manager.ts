@@ -9,17 +9,17 @@ import {
   RORG,
   RadioTelegram,
   SerialConfig,
-} from './types.js';
+} from './packet/types.js';
 
 /**
- * Gestionnaire principal pour la communication EnOcean
+ * Main manager for EnOcean communication
  */
 export class EnOceanManager extends EventEmitter {
   /**
-   * Configuration par défaut du port série pour TCM 310
+   * Default serial port configuration for TCM 310
    */
   private readonly defaultSerialConfig: SerialConfig = {
-    baudRate: 57_600, // Vitesse standard pour TCM 310
+    baudRate: 57_600, // Standard speed for TCM 310
     dataBits: 8,
     parity: 'none',
     stopBits: 1,
@@ -38,9 +38,9 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Se connecte au périphérique EnOcean
-   * @param portPath - Chemin du port série (ex: '/dev/ttyUSB0' ou 'COM3')
-   * @param config - Configuration optionnelle du port série
+   * Connect to EnOcean device
+   * @param portPath - Serial port path (e.g. '/dev/ttyUSB0' or 'COM3')
+   * @param config - Optional serial port configuration
    */
   public async connect(
     portPath: string,
@@ -63,13 +63,13 @@ export class EnOceanManager extends EventEmitter {
         stopBits: serialConfig.stopBits as 1 | 2,
       });
 
-      // Configuration des événements du port série
+      // Configure serial port events
       this.setupSerialPortEvents();
 
-      // Ouverture du port
+      // Open the port
       await new Promise<void>((resolve, reject) => {
         if (!this.serialPort) {
-          reject(new Error('Port série non initialisé'));
+          reject(new Error('Serial port not initialized'));
           return;
         }
 
@@ -77,7 +77,7 @@ export class EnOceanManager extends EventEmitter {
           if (error) {
             reject(
               new Error(
-                `Impossible d'ouvrir le port ${portPath}: ${error.message}`,
+                `Unable to open port ${portPath}: ${error.message}`,
               ),
             );
           } else {
@@ -88,17 +88,17 @@ export class EnOceanManager extends EventEmitter {
 
       this.isConnected = true;
       this.reconnectAttempts = 0;
-      console.log(`Connecté au stick EnOcean sur ${portPath}`);
+      console.log(`Connected to EnOcean stick on ${portPath}`);
       this.emit('connected', portPath);
     } catch (error) {
-      console.error('Erreur de connexion:', error);
+      console.error('Connection error:', error);
       this.emit('error', error);
       throw error;
     }
   }
 
   /**
-   * Déconnecte du stick EnOcean
+   * Disconnect from EnOcean stick
    */
   public async disconnect(): Promise<void> {
     if (this.reconnectTimer) {
@@ -117,11 +117,11 @@ export class EnOceanManager extends EventEmitter {
     this.isConnected = false;
     this.serialPort = null;
     this.parser.clearBuffer();
-    console.log('Déconnecté du stick EnOcean');
+    console.log('Disconnected from EnOcean stick');
   }
 
   /**
-   * Retourne des statistiques sur le parser
+   * Returns parser statistics
    */
   public getParserStats(): { bufferSize: number } {
     return {
@@ -130,7 +130,7 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Retourne l'état de connexion
+   * Returns connection status
    */
   public isPortConnected(): boolean {
     return (
@@ -139,18 +139,18 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Envoie une commande au module EnOcean
-   * @param data - Données à envoyer
+   * Send a command to the EnOcean module
+   * @param data - Data to send
    */
   public async sendCommand(data: Buffer): Promise<void> {
     if (!this.isConnected || !this.serialPort) {
-      throw new Error('Non connecté au stick EnOcean');
+      throw new Error('Not connected to EnOcean stick');
     }
 
     return new Promise((resolve, reject) => {
       this.serialPort!.write(data, (error) => {
         if (error) {
-          reject(new Error(`Erreur d'envoi: ${error.message}`));
+          reject(new Error(`Send error: ${error.message}`));
         } else {
           resolve();
         }
@@ -159,7 +159,7 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Tente une reconnexion automatique
+   * Attempt automatic reconnection
    */
   private attemptReconnect(): void {
     if (
@@ -167,54 +167,54 @@ export class EnOceanManager extends EventEmitter {
       !this.reconnectTimer
     ) {
       this.reconnectAttempts++;
-      const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 30_000); // Backoff exponentiel, max 30s
+      const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 30_000); // Exponential backoff, max 30s
 
       console.log(
-        `Tentative de reconnexion ${this.reconnectAttempts}/${this.maxReconnectAttempts} dans ${delay}ms`,
+        `Reconnection attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay}ms`,
       );
 
       this.reconnectTimer = setTimeout(() => {
         this.reconnectTimer = null;
-        // Note: Pour une vraie reconnexion, il faudrait stocker le portPath et la config
+        // Note: For real reconnection, we should store the portPath and config
         this.emit('reconnectAttempt', this.reconnectAttempts);
       }, delay);
     }
   }
 
   /**
-   * Traite les données reçues du port série
-   * @param data - Données brutes reçues
+   * Process data received from serial port
+   * @param data - Raw received data
    */
   private handleIncomingData(data: Buffer): void {
     try {
-      // Ajouter les données au parser
+      // Add data to parser
       this.parser.addData(data);
 
-      // Parser les paquets disponibles
+      // Parse available packets
       const packets = this.parser.parsePackets();
 
-      // Traiter chaque paquet
+      // Process each packet
       for (const packet of packets) {
         this.processPacket(packet);
       }
     } catch (error) {
-      console.error('Erreur lors du traitement des données:', error);
+      console.error('Error processing data:', error);
       this.emit('error', error);
     }
   }
 
   /**
-   * Parse basique d'un télégrame radio (version simplifiée pour compatibilité)
-   * @param data - Données du télégrame
-   * @param optionalData - Données optionnelles
-   * @returns Télégrame radio parsé
+   * Basic parsing of a radio telegram (simplified version for compatibility)
+   * @param data - Telegram data
+   * @param optionalData - Optional data
+   * @returns Parsed radio telegram
    */
   private parseRadioTelegramBasic(
     data: Buffer,
     optionalData: Buffer,
   ): null | RadioTelegram {
     if (data.length < 6) {
-      console.warn('Télégrame radio trop court');
+      console.warn('Radio telegram too short');
       return null;
     }
 
@@ -248,17 +248,17 @@ export class EnOceanManager extends EventEmitter {
   }
 
   /**
-   * Traite un paquet d'événement
-   * @param packet - Paquet d'événement
+   * Process an event packet
+   * @param packet - Event packet
    */
   private processEventPacket(packet: ESP3Packet): void {
-    console.log('Événement reçu:', packet.data.toString('hex'));
+    console.log('Event received:', packet.data.toString('hex'));
     this.emit('event', packet.data);
   }
 
   /**
-   * Traite un paquet ESP3 parsé
-   * @param packet - Paquet à traiter
+   * Process a parsed ESP3 packet
+   * @param packet - Packet to process
    */
   private processPacket(packet: ESP3Packet): void {
     this.emit('packet', packet);
@@ -280,81 +280,81 @@ export class EnOceanManager extends EventEmitter {
       }
 
       default: {
-        console.log(`Type de paquet non géré: ${packet.header.packetType}`);
+        console.log(`Unhandled packet type: ${packet.header.packetType}`);
         break;
       }
     }
   }
 
   /**
-   * Traite un paquet radio
-   * @param packet - Paquet radio à traiter
+   * Process a radio packet
+   * @param packet - Radio packet to process
    */
   private processRadioPacket(packet: ESP3Packet): void {
     try {
-      // Parser le télégrame radio avec le parser existant
+      // Parse radio telegram with existing parser
       const radioTelegram = this.parser.parseRadioTelegram
         ? this.parser.parseRadioTelegram(packet.data, packet.optionalData)
         : this.parseRadioTelegramBasic(packet.data, packet.optionalData);
 
       if (radioTelegram) {
         console.log(
-          `Paquet radio reçu: RORG=0x${radioTelegram.rorg.toString(16).padStart(2, '0')} de ${radioTelegram.senderId.toString(16).padStart(8, '0')}`,
+          `Radio packet received: RORG=0x${radioTelegram.rorg.toString(16).padStart(2, '0')} from ${radioTelegram.senderId.toString(16).padStart(8, '0')}`,
         );
         console.log(`  Signal: ${radioTelegram.dbm} dBm`);
 
         this.emit('radioTelegram', radioTelegram);
 
-        // Tentative de décodage EEP
+        // Attempt EEP decoding
         try {
           const decodedData = EEPDecoder.decode(radioTelegram);
 
           if (decodedData) {
-            console.log(`  Profil EEP détecté: ${decodedData.profile}`);
+            console.log(`  EEP profile detected: ${decodedData.profile}`);
             this.emit('eepData', decodedData);
           }
         } catch (eepError) {
-          // Le décodage EEP est optionnel, continuer même en cas d'erreur
-          console.warn('Erreur lors du décodage EEP:', eepError);
+          // EEP decoding is optional, continue even if error occurs
+          console.warn('Error decoding EEP:', eepError);
         }
       }
     } catch (error) {
-      console.error('Erreur lors du traitement du paquet radio:', error);
+      console.error('Error processing radio packet:', error);
       this.emit('error', error);
     }
   }
 
   /**
-   * Traite un paquet de réponse
-   * @param packet - Paquet de réponse
+   * Process a response packet
+   * @param packet - Response packet
    */
   private processResponsePacket(packet: ESP3Packet): void {
-    console.log('Réponse reçue du module:', packet.data.toString('hex'));
+    console.log('Response received from module:', packet.data.toString('hex'));
     this.emit('response', packet.data);
   }
 
   /**
-   * Configure les événements du port série
+   * Configure serial port events
    */
   private setupSerialPortEvents(): void {
     if (!this.serialPort) return;
 
-    // Réception de données
+    // Data reception
     this.serialPort.on('data', (data: Buffer) => {
       this.handleIncomingData(data);
     });
 
-    // Erreur sur le port série
+    // Serial port error
     this.serialPort.on('error', (error) => {
-      console.error('Erreur du port série:', error);
+      console.error('Serial port error:', error);
       this.isConnected = false;
       this.emit('error', error);
       this.attemptReconnect();
     });
 
-    // Port fermé
+    // Port closed
     this.serialPort.on('close', () => {
-      console.log('Port série fermé');
+      console.log('Serial port closed');
       this.isConnected = false;
       this.emit('disconnected');
       this.attemptReconnect();
