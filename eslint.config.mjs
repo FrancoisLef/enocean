@@ -15,6 +15,7 @@ export default tseslint.config(
     rules: {
       ...vitest.configs.all.rules,
       'vitest/no-hooks': 'off',
+      'vitest/prefer-expect-assertions': 'off',
     },
   },
   prettier,

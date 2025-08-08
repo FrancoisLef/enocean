@@ -107,7 +107,6 @@ export class BitOperations {
   }
 }
 
-
 /**
  * Byte field extractor for EnOcean telegram parsing
  * Provides readable methods for extracting data fields from bytes

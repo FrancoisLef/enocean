@@ -1,4 +1,4 @@
-import { CRC8Calculator } from './checksum/crc8.js';
+import { calculateCrc8 } from './checksum/crc8.js';
 import { OptionalDataParser } from './packet/optional-data.js';
 import {
   ESP3Header,
@@ -98,7 +98,7 @@ export class EnOceanParser {
         totalPacketSize - 1,
       );
 
-      const calculatedChecksum = CRC8Calculator.calculate(packetData);
+      const calculatedChecksum = calculateCrc8(packetData);
 
       if (calculatedChecksum !== checksum) {
         console.warn(
@@ -147,7 +147,8 @@ export class EnOceanParser {
     const status = data[data.length - 1];
 
     // Optional data (if present)
-    const { subTelNum, destinationId, dbm, securityLevel } = OptionalDataParser.parse(optionalData);
+    const { subTelNum, destinationId, dbm, securityLevel } =
+      OptionalDataParser.parse(optionalData);
 
     return {
       data: userData,
@@ -183,7 +184,7 @@ export class EnOceanParser {
 
     // Header CRC verification
     const headerForCRC = headerBuffer.slice(1, 5);
-    const calculatedCRC = CRC8Calculator.calculate(headerForCRC);
+    const calculatedCRC = calculateCrc8(headerForCRC);
 
     if (calculatedCRC !== crc8Header) {
       console.warn(

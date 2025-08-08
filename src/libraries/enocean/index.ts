@@ -1,8 +1,5 @@
-export {
-  BitOperations,
-  ByteFieldExtractor,
-} from './bit-operations.js';
-export { CRC8Calculator } from './checksum/crc8.js';
+export { BitOperations, ByteFieldExtractor } from './bit-operations.js';
+export { calculateCrc8, verifyCrc8 } from './checksum/crc8.js';
 export { EnOceanManager } from './manager.js';
 export { EnOceanParser } from './parser.js';
 export { EEPDecoder } from './profiles.js';

@@ -8,6 +8,7 @@ export default {
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   plugins: [
+    'prettier-plugin-jsdoc',
     'prettier-plugin-packagejson',
     '@trivago/prettier-plugin-sort-imports',
   ],

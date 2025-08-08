@@ -1,8 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { SerialPort } from 'serialport';
 
-import { EnOceanParser } from './parser.js';
-import { EEPDecoder } from './profiles.js';
 import {
   ESP3Packet,
   PacketType,
@@ -10,6 +8,8 @@ import {
   RadioTelegram,
   SerialConfig,
 } from './packet/types.js';
+import { EnOceanParser } from './parser.js';
+import { EEPDecoder } from './profiles.js';
 
 /**
  * Main manager for EnOcean communication
@@ -76,9 +76,7 @@ export class EnOceanManager extends EventEmitter {
         this.serialPort.open((error) => {
           if (error) {
             reject(
-              new Error(
-                `Unable to open port ${portPath}: ${error.message}`,
-              ),
+              new Error(`Unable to open port ${portPath}: ${error.message}`),
             );
           } else {
             resolve();
