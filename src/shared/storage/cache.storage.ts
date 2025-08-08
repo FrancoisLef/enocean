@@ -4,9 +4,9 @@ import { join } from 'node:path';
 import { FileStorage } from './file.storage.js';
 
 export interface CacheData {
-  'dongle:baud'?: number;
-  'dongle:configured'?: boolean;
-  'dongle:port'?: string;
+  'radio:baud'?: number;
+  'radio:configured'?: boolean;
+  'radio:path'?: string;
 }
 
 export type CacheKey = keyof CacheData;

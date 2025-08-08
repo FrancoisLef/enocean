@@ -33,9 +33,9 @@ describe('cache storage', () => {
     it('creates a CacheStorage instance with empty cache', () => {
       expect.hasAssertions();
       expect(cache).toBeInstanceOf(CacheStorage);
-      expect(cache.get('dongle:port')).toBeUndefined();
-      expect(cache.get('dongle:baud')).toBeUndefined();
-      expect(cache.get('dongle:configured')).toBeUndefined();
+      expect(cache.get('radio:path')).toBeUndefined();
+      expect(cache.get('radio:baud')).toBeUndefined();
+      expect(cache.get('radio:configured')).toBeUndefined();
     });
   });
 
@@ -73,9 +73,9 @@ describe('cache storage', () => {
       expect.hasAssertions();
 
       const testData: CacheData = {
-        'dongle:baud': 57_600,
-        'dongle:configured': true,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 57_600,
+        'radio:configured': true,
+        'radio:path': '/dev/ttyUSB0',
       };
 
       // Create cache file with test data
@@ -86,9 +86,9 @@ describe('cache storage', () => {
       await cache.init();
 
       // Verify data was loaded
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
-      expect(cache.get('dongle:baud')).toBe(57_600);
-      expect(cache.get('dongle:configured')).toBe(true);
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:baud')).toBe(57_600);
+      expect(cache.get('radio:configured')).toBe(true);
     });
 
     it('returns the CacheStorage instance for chaining', async () => {
@@ -106,17 +106,17 @@ describe('cache storage', () => {
 
       await cache.init();
 
-      expect(cache.get('dongle:port')).toBeUndefined();
-      expect(cache.get('dongle:baud')).toBeUndefined();
-      expect(cache.get('dongle:configured')).toBeUndefined();
+      expect(cache.get('radio:path')).toBeUndefined();
+      expect(cache.get('radio:baud')).toBeUndefined();
+      expect(cache.get('radio:configured')).toBeUndefined();
     });
 
     it('returns cached values after initialization', async () => {
       expect.hasAssertions();
 
       const testData: CacheData = {
-        'dongle:baud': 115_200,
-        'dongle:port': '/dev/ttyUSB1',
+        'radio:baud': 115_200,
+        'radio:path': '/dev/ttyUSB1',
       };
 
       await fs.mkdir(path.dirname(file), { recursive: true });
@@ -124,9 +124,9 @@ describe('cache storage', () => {
 
       await cache.init();
 
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB1');
-      expect(cache.get('dongle:baud')).toBe(115_200);
-      expect(cache.get('dongle:configured')).toBeUndefined();
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB1');
+      expect(cache.get('radio:baud')).toBe(115_200);
+      expect(cache.get('radio:configured')).toBeUndefined();
     });
   });
 
@@ -138,57 +138,57 @@ describe('cache storage', () => {
     it('sets and persists cache values', async () => {
       expect.hasAssertions();
 
-      const result = await cache.set('dongle:port', '/dev/ttyUSB0');
+      const result = await cache.set('radio:path', '/dev/ttyUSB0');
 
       expect(result).toStrictEqual(cache);
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
 
       // Verify the value was persisted to file
       const fileContent = await fs.readFile(file, 'utf8');
       const parsedData = JSON.parse(fileContent);
 
-      expect(parsedData['dongle:port']).toBe('/dev/ttyUSB0');
+      expect(parsedData['radio:path']).toBe('/dev/ttyUSB0');
     });
 
     it('handles multiple cache keys', async () => {
       expect.hasAssertions();
 
-      await cache.set('dongle:port', '/dev/ttyUSB0');
-      await cache.set('dongle:baud', 57_600);
+      await cache.set('radio:path', '/dev/ttyUSB0');
+      await cache.set('radio:baud', 57_600);
 
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
-      expect(cache.get('dongle:baud')).toBe(57_600);
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:baud')).toBe(57_600);
 
       // Verify all values were persisted
       const fileContent = await fs.readFile(file, 'utf8');
       const parsedData = JSON.parse(fileContent);
 
-      expect(parsedData['dongle:port']).toBe('/dev/ttyUSB0');
-      expect(parsedData['dongle:baud']).toBe(57_600);
+      expect(parsedData['radio:path']).toBe('/dev/ttyUSB0');
+      expect(parsedData['radio:baud']).toBe(57_600);
     });
 
     it('overwrites existing cache values', async () => {
       expect.hasAssertions();
 
-      await cache.set('dongle:port', '/dev/ttyUSB0');
+      await cache.set('radio:path', '/dev/ttyUSB0');
 
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
 
-      await cache.set('dongle:port', '/dev/ttyUSB1');
+      await cache.set('radio:path', '/dev/ttyUSB1');
 
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB1');
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB1');
 
       // Verify the new value was persisted
       const fileContent = await fs.readFile(file, 'utf8');
       const parsedData = JSON.parse(fileContent);
 
-      expect(parsedData['dongle:port']).toBe('/dev/ttyUSB1');
+      expect(parsedData['radio:path']).toBe('/dev/ttyUSB1');
     });
 
     it('returns the CacheStorage instance for chaining', async () => {
       expect.hasAssertions();
 
-      const result = await cache.set('dongle:port', '/dev/ttyUSB0');
+      const result = await cache.set('radio:path', '/dev/ttyUSB0');
 
       expect(result).toStrictEqual(cache);
     });
@@ -197,59 +197,59 @@ describe('cache storage', () => {
       expect.hasAssertions();
 
       const result = await cache.set({
-        'dongle:baud': 57_600,
-        'dongle:configured': true,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 57_600,
+        'radio:configured': true,
+        'radio:path': '/dev/ttyUSB0',
       });
 
       expect(result).toStrictEqual(cache);
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
-      expect(cache.get('dongle:baud')).toBe(57_600);
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:baud')).toBe(57_600);
 
       // Verify all values were persisted to file
       const fileContent = await fs.readFile(file, 'utf8');
       const parsedData = JSON.parse(fileContent);
 
-      expect(parsedData['dongle:port']).toBe('/dev/ttyUSB0');
-      expect(parsedData['dongle:baud']).toBe(57_600);
+      expect(parsedData['radio:path']).toBe('/dev/ttyUSB0');
+      expect(parsedData['radio:baud']).toBe(57_600);
     });
 
     it('overwrites existing values with bulk update', async () => {
       expect.hasAssertions();
 
       // Set initial values
-      await cache.set('dongle:port', '/dev/ttyUSB0');
-      await cache.set('dongle:baud', 57_600);
+      await cache.set('radio:path', '/dev/ttyUSB0');
+      await cache.set('radio:baud', 57_600);
 
       // Bulk update with some overwritten and some new values
       await cache.set({
-        'dongle:baud': 115_200,
-        'dongle:configured': true,
-        'dongle:port': '/dev/ttyUSB1',
+        'radio:baud': 115_200,
+        'radio:configured': true,
+        'radio:path': '/dev/ttyUSB1',
       });
 
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB1');
-      expect(cache.get('dongle:baud')).toBe(115_200);
-      expect(cache.get('dongle:configured')).toBe(true);
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB1');
+      expect(cache.get('radio:baud')).toBe(115_200);
+      expect(cache.get('radio:configured')).toBe(true);
     });
 
     it('handles partial bulk updates', async () => {
       expect.hasAssertions();
 
       // Set initial values
-      await cache.set('dongle:port', '/dev/ttyUSB0');
-      await cache.set('dongle:baud', 57_600);
+      await cache.set('radio:path', '/dev/ttyUSB0');
+      await cache.set('radio:baud', 57_600);
 
       // Partial bulk update
       await cache.set({
-        'dongle:configured': true,
+        'radio:configured': true,
       });
 
       // Original values should remain unchanged
-      expect(cache.get('dongle:port')).toBe('/dev/ttyUSB0');
-      expect(cache.get('dongle:baud')).toBe(57_600);
+      expect(cache.get('radio:path')).toBe('/dev/ttyUSB0');
+      expect(cache.get('radio:baud')).toBe(57_600);
       // New value should be set
-      expect(cache.get('dongle:configured')).toBe(true);
+      expect(cache.get('radio:configured')).toBe(true);
     });
   });
 
@@ -270,64 +270,64 @@ describe('cache storage', () => {
       expect.hasAssertions();
 
       await cache.set({
-        'dongle:baud': 57_600,
-        'dongle:configured': true,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 57_600,
+        'radio:configured': true,
+        'radio:path': '/dev/ttyUSB0',
       });
 
       const result = cache.getAll();
 
       expect(result).toStrictEqual({
-        'dongle:baud': 57_600,
-        'dongle:configured': true,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 57_600,
+        'radio:configured': true,
+        'radio:path': '/dev/ttyUSB0',
       });
     });
 
     it('returns partial cache values when some are undefined', async () => {
       expect.hasAssertions();
 
-      await cache.set('dongle:port', '/dev/ttyUSB0');
-      await cache.set('dongle:baud', 115_200);
+      await cache.set('radio:path', '/dev/ttyUSB0');
+      await cache.set('radio:baud', 115_200);
 
       const result = cache.getAll();
 
       expect(result).toStrictEqual({
-        'dongle:baud': 115_200,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 115_200,
+        'radio:path': '/dev/ttyUSB0',
       });
     });
 
     it('returns a copy of cache data (not a reference)', async () => {
       expect.hasAssertions();
 
-      await cache.set('dongle:port', '/dev/ttyUSB0');
+      await cache.set('radio:path', '/dev/ttyUSB0');
 
       const result = cache.getAll();
-      result['dongle:port'] = '/dev/ttyUSB1';
+      result['radio:path'] = '/dev/ttyUSB1';
 
       // Original cache should remain unchanged
-      expect(cache.get('dongle:port')).to.equal('/dev/ttyUSB0');
+      expect(cache.get('radio:path')).to.equal('/dev/ttyUSB0');
     });
 
     it('reflects changes after cache updates', async () => {
       expect.hasAssertions();
 
-      await cache.set('dongle:port', '/dev/ttyUSB0');
+      await cache.set('radio:path', '/dev/ttyUSB0');
 
       let result = cache.getAll();
 
       expect(result).toStrictEqual({
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:path': '/dev/ttyUSB0',
       });
 
-      await cache.set('dongle:baud', 57_600);
+      await cache.set('radio:baud', 57_600);
 
       result = cache.getAll();
 
       expect(result).toStrictEqual({
-        'dongle:baud': 57_600,
-        'dongle:port': '/dev/ttyUSB0',
+        'radio:baud': 57_600,
+        'radio:path': '/dev/ttyUSB0',
       });
     });
   });
@@ -338,16 +338,16 @@ describe('cache storage', () => {
 
       // First instance: set some data
       await cache.init();
-      await cache.set('dongle:port', '/dev/ttyUSB0');
-      await cache.set('dongle:baud', 57_600);
+      await cache.set('radio:path', '/dev/ttyUSB0');
+      await cache.set('radio:baud', 57_600);
 
       // Second instance: load the same cache file
       const secondCache = new CacheStorage(file);
       await secondCache.init();
 
       // Verify data persisted
-      expect(secondCache.get('dongle:port')).to.equal('/dev/ttyUSB0');
-      expect(secondCache.get('dongle:baud')).to.equal(57_600);
+      expect(secondCache.get('radio:path')).to.equal('/dev/ttyUSB0');
+      expect(secondCache.get('radio:baud')).to.equal(57_600);
     });
   });
 });

@@ -66,7 +66,7 @@ await manager.connect('/dev/ttyUSB0', { baudRate: 57600 });
 - **Framework Separation**: Core EnOcean logic is completely independent of OCLIF CLI framework
 - **Direct SerialPort Usage**: Uses SerialPort directly for communication
 - **Storage Abstraction**: File operations are abstracted through shared layer
-- **Supports TCM 310 USB dongles** with 57,600 baud default
+- **Supports TCM 310 USB dongles** with configurable baud rates (57,600 default, 115,200, 230,400, 460,800)
 - **Cache files** are stored in OCLIF's cache directory (CLI-specific concern)
 - **Commands require dongle** to be configured before use
 - **French comments and console output** (intentional for target users)

@@ -6,9 +6,9 @@ import { EnOceanManager } from '../libraries/enocean/manager.js';
 export class ListenCommand extends BaseCommand {
   protected async execute(): Promise<void> {
     const {
-      'dongle:baud': baud,
-      'dongle:configured': isConfigured,
-      'dongle:port': port,
+      'radio:baud': baud,
+      'radio:configured': isConfigured,
+      'radio:path': port,
     } = this.cache.getAll();
 
     if (!isConfigured || !port || !baud) {
